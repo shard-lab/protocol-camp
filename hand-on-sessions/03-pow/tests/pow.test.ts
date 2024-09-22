@@ -1,21 +1,19 @@
-import { ethers, keccak256 } from "ethers";
 import { proofOfWork } from "../src/pow";
 
-describe("PoW", () => {
-  const privateKey =
-    "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
-  const address = "0xFCAd0B19bB29D4674531d6f115237E16AfCE377c";
-  const DIFFICULTY = 24n;
-  const MAX_UINT256 = 2n ** 256n - 1n;
+describe("Proof of Work", () => {
+  test("Find a valid nonce for the expected root", () => {
+    const data = "Hello! Protocol Camp!!";
+    const difficulty = 20; // 20 leading zero bits. The number of leading zero bits the hash must have. It should be between 0 and 256.
 
-  test("find a proof of work", async () => {
-    const proof = proofOfWork(address);
+    const nonce = proofOfWork(data, difficulty);
 
-    const hash = keccak256(
-      ethers.solidityPacked(["address", "uint256"], [address, proof])
-    );
+    const hash = require("crypto")
+      .createHash("sha256")
+      .update(data + nonce)
+      .digest("hex");
 
-    const hashNum = BigInt(hash);
-    expect(hashNum <= MAX_UINT256 >> DIFFICULTY).toBe(true);
+    const expectedPrefix = "00000"; // 20 bits in binary = 5 zeros in hex
+
+    expect(hash.startsWith(expectedPrefix)).toBe(true);
   });
 });

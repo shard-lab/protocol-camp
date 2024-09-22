@@ -1,25 +1,12 @@
-import { ethers, keccak256 } from "ethers";
+import { createHash } from "crypto";
 
-export function proofOfWork(address: string): bigint {
-  let nonce = 0n;
-  const DIFFICULTY = 4n;
-  const MAX_UINT256 = 2n ** 256n - 1n;
-  let conditionMet = false;
-
-  while (!conditionMet) {
-    const hash = keccak256(
-      ethers.solidityPacked(["address", "uint256"], [address, nonce])
-    );
-
-    const hashNum = BigInt(hash);
-
-    if (hashNum <= MAX_UINT256 >> DIFFICULTY) {
-      conditionMet = true;
-      return nonce;
-    }
-
-    nonce++;
-  }
-
-  return 0n;
+/**
+ * Function to perform proof of work.
+ * @param data - The input data for the proof of work.
+ * @param difficulty - The number of leading zero bits the hash must have. It should be between 0 and 256.
+ *
+ * @returns The nonce value that satisfies the proof of work condition.
+ */
+export function proofOfWork(data: string, difficulty: number): number {
+  throw new Error("implement me!");
 }
