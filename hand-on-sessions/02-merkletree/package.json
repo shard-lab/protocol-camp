@@ -1,0 +1,13 @@
+{
+  "name": "02-merkletree",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "jest --testPathPattern ./hand-on-sessions/02-merkletree --config ../../jest.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

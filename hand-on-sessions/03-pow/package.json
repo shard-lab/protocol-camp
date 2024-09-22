@@ -1,0 +1,13 @@
+{
+  "name": "03-pow",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "jest --testPathPattern ./hand-on-sessions/03-pow --config ../../jest.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}
