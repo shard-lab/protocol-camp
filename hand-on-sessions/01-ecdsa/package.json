@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest --testPathPattern ./hand-on-sessions/01-ecdsa --config ../../jest.config.js"
+    "test": "mocha test/**/*.test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "elliptic": "^6.5.7",
-    "keccak": "^3.0.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/elliptic": "^6.4.18",
-    "@types/keccak": "^3.0.4"
+    "@types/keccak": "^3.0.4",
+    "elliptic": "^6.5.7",
+    "keccak": "^3.0.4"
   }
 }

@@ -1,9 +1,9 @@
 {
-  "name": "03-pow",
+  "name": "05-transaction",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "mocha test/**/*.test.ts"
+    "test": "npx hardhat test"
   },
   "keywords": [],
   "author": "",

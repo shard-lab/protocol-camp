@@ -1,6 +1,7 @@
 import { generateKeyPair, signMessage, verifySignature } from "../src/ecdsa";
+import { expect } from "chai";
 
-describe("ECDSA Hands-on Session", () => {
+describe("#ECDSA Hands-on Session", function () {
   const alicePrivateKey =
     "eaf85898356aeb4c286fdb3458a65f6e0596bb57ea1bc96fc486c371773b9643";
   const alicePublicKey =
@@ -13,39 +14,39 @@ describe("ECDSA Hands-on Session", () => {
   const keccak256HashedmessageSignature =
     "30450220660ce020604d195da35b5ac79b4e9b68e61630af6078a507d9d445285c94a84a0221009c3f3909910d0a6530d3443c475d0ea5e7539eff14f7502d579ef806a0e2e1f1";
 
-  it("Generates a random key pair", () => {
+  it("should generate a random key pair", function () {
     const { privateKey, publicKey } = generateKeyPair();
-    expect(privateKey).toBeDefined();
-    expect(publicKey).toBeDefined();
+    expect(privateKey).to.exist;
+    expect(publicKey).to.exist;
 
     console.log(`Private Key(hex): ${privateKey}`);
     console.log(`Public Key(hex): ${publicKey}`);
   });
 
-  describe("Alice & Bob Scenario", () => {
-    it("Alice signs a raw message with her private key", () => {
+  describe("Alice & Bob Scenario", function () {
+    it("should sign a raw message with Alice's private key", function () {
       const message = "I am Alice";
       const signature = signMessage(alicePrivateKey, message);
-      expect(signature).toBe(rawMessageSignature);
+      expect(signature).to.equal(rawMessageSignature);
     });
 
-    it("Bob verifies Alice's signature(raw) with her public key", () => {
+    it("should verify Alice's signature (raw) with her public key", function () {
       const message = "I am Alice";
       const isValid = verifySignature(
         message,
         rawMessageSignature,
         alicePublicKey
       );
-      expect(isValid).toBe(true);
+      expect(isValid).to.be.true;
     });
 
-    it("Alice signs a sha-256 message with her private key", () => {
+    it("should sign a sha-256 message with Alice's private key", function () {
       const message = "I am Alice";
       const signature = signMessage(alicePrivateKey, message, "sha256");
-      expect(signature).toBe(sha256HashedMessageSignature);
+      expect(signature).to.equal(sha256HashedMessageSignature);
     });
 
-    it("Bob verifies Alice's signature(sha256) with her public key", () => {
+    it("should verify Alice's signature (sha256) with her public key", function () {
       const message = "I am Alice";
       const isValid = verifySignature(
         message,
@@ -53,16 +54,16 @@ describe("ECDSA Hands-on Session", () => {
         alicePublicKey,
         "sha256"
       );
-      expect(isValid).toBe(true);
+      expect(isValid).to.be.true;
     });
 
-    it("Alice signs a keccak-256 message with her private key", () => {
+    it("should sign a keccak-256 message with Alice's private key", function () {
       const message = "I am Alice";
       const signature = signMessage(alicePrivateKey, message, "keccak256");
-      expect(signature).toBe(keccak256HashedmessageSignature);
+      expect(signature).to.equal(keccak256HashedmessageSignature);
     });
 
-    it("Bob verifies Alice's signature(keccak256) with her public key", () => {
+    it("should verify Alice's signature (keccak256) with her public key", function () {
       const message = "I am Alice";
       const isValid = verifySignature(
         message,
@@ -70,7 +71,7 @@ describe("ECDSA Hands-on Session", () => {
         alicePublicKey,
         "keccak256"
       );
-      expect(isValid).toBe(true);
+      expect(isValid).to.be.true;
     });
   });
 });
