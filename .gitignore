@@ -1,7 +1,13 @@
+# Mac 
+.DS_Store
+
 # Hardhat
 typechain
 cache
 artifacts
+
+# Aptos
+build
 
 # Ignore Answer
 *.answer.ts

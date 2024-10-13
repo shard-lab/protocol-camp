@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 dotenv.config();
 
-describe("#Account Hands-on Session", () => {
+describe("#Ethereum Account Hands-on Session", () => {
   it("Create a new EOA (PrivateKey, PublicKey (Compressed), Address) using ethers.js", async () => {
     // Set below
     let privateKey = "";

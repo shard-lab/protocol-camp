@@ -4,7 +4,7 @@ import { SimpleStorage } from "../typechain/SimpleStorage";
 import { SimpleStorage__factory } from "../typechain";
 import { BigNumber } from "ethers";
 
-describe("#Transaction Hands-on Session", function () {
+describe("#Ethereum Transaction Hands-on Session", function () {
   it("Handle unit conversions between wei, gwei, and ether", async () => {
     // wei: The smallest unit in Ethereum. 1 Ether = 10^18 Wei.
     // gwei: 1 Gwei equals 10^9 Wei (1 billion Wei).
