@@ -20,7 +20,7 @@ describe("#Aptos Multi Agent Transactions Hands-on Session", function () {
     signer = Account.generate();
     await aptos.fundAccount({
       accountAddress: signer.accountAddress,
-      amount: 100_000_100,
+      amount: 100_000_000,
     });
 
     cosigner = Account.generate();

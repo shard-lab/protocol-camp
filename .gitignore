@@ -12,6 +12,7 @@ build
 # Ignore Answer
 *.answer.ts
 *.answer.move
+**/*.answer/
 
 # Logs
 logs
