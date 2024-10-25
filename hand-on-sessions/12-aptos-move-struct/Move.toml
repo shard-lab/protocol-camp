@@ -4,6 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
+protocol = "0x"
 
 [dev-addresses]
 

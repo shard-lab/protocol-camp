@@ -52,6 +52,10 @@ describe("#Aptos Account Hands-on Session", () => {
       privateKey: new Ed25519PrivateKey(privateKeyHex),
     });
 
+    //
+    // Implement Here
+    //
+
     const balance = await aptos.getAccountAPTAmount({
       accountAddress: account.accountAddress,
     });

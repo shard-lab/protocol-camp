@@ -1,4 +1,3 @@
-
 module protocol::basic2 {
     /// Computes the sum of numbers up to `n` using a `loop`
     public fun sum_up_to_n(n: u64): u64 {
@@ -17,5 +16,4 @@ module protocol::basic2 {
         // TODO: Implement function to sum all elements in the vector
         0 // Placeholder
     }
-
 }

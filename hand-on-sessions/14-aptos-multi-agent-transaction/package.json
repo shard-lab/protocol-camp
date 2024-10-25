@@ -1,0 +1,12 @@
+{
+  "name": "14-aptos-multi-agent-transaction",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
