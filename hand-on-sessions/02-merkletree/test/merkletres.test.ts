@@ -1,7 +1,7 @@
 import { MerkleTree } from "../src/merkletree";
 import { assert } from "chai";
 
-describe("Merkle Tree Hands-on Session", () => {
+describe("#Merkle Tree Hands-on Session", () => {
   it("should generate an empty tree", () => {
     const leaves: string[] = [];
     const tree = new MerkleTree(leaves);

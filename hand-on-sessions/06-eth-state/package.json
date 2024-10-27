@@ -1,7 +1,8 @@
 {
-  "name": "03-pow",
+  "name": "06-eth-state",
   "version": "1.0.0",
   "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "mocha test/**/*.test.ts"
   },
