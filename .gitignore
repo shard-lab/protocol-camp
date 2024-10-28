@@ -12,6 +12,7 @@ build
 # Ignore Answer
 *.answer.sol
 *.answer.ts
+*.answer.js
 *.answer.move
 **/*.answer/
 

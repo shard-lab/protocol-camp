@@ -1,5 +1,3 @@
-Here’s an updated README for the Rollup project, incorporating the new information about the contract and its limitations:
-
 # Rollup Hands-on Session
 
 ## 1. Overview
