@@ -10,6 +10,7 @@ artifacts
 build
 
 # Ignore Answer
+*.answer.sol
 *.answer.ts
 *.answer.move
 **/*.answer/

@@ -5,7 +5,7 @@ import { expect } from "chai";
 dotenv.config();
 
 describe("#Ethereum Account Hands-on Session", () => {
-  it("Create a new EOA (PrivateKey, PublicKey (Compressed), Address) using ethers.js", async () => {
+  it("should create a new EOA (PrivateKey, PublicKey (Compressed), Address) using ethers.js", async () => {
     // Set below
     let privateKey = "";
     let publicKey = "";
@@ -33,7 +33,7 @@ describe("#Ethereum Account Hands-on Session", () => {
     expect(computedAddress.toLowerCase()).to.equal(address.toLowerCase());
   });
 
-  it("Generate a fixed EOA, receive faucet Ether, and verify non-zero balance", async () => {
+  it("should generate a fixed EOA, receive faucet Ether, and verify non-zero balance", async () => {
     // Set process.env.PRIVATE_KEY in .env file
     const privateKey = process.env.PRIVATE_KEY;
     if (!privateKey || privateKey.length === 0) {

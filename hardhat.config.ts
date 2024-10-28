@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { HardhatUserConfig, task } from "hardhat/config";
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
+import "@nomicfoundation/hardhat-chai-matchers";
 
 dotenv.config();
 
