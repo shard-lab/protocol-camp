@@ -16,25 +16,7 @@ export function signMessage(
   message: string,
   hashAlgorithm: "none" | "sha256" | "keccak256" = "none"
 ): string {
-  const key = ec.keyFromPrivate(privateKey, "hex");
-
-  let msgHash;
-  switch (hashAlgorithm) {
-    case "none":
-      msgHash = message;
-      break;
-    case "sha256":
-      msgHash = createHash("sha256").update(message).digest();
-      break;
-    case "keccak256":
-      msgHash = keccak("keccak256").update(message).digest();
-      break;
-    default:
-      throw new Error("invalid hashAlgorithm");
-  }
-
-  const signature = key.sign(msgHash);
-  return signature.toDER("hex");
+  throw new Error("implement me!!");
 }
 
 export function verifySignature(
@@ -43,22 +25,5 @@ export function verifySignature(
   publicKey: string,
   hashAlgorithm: "none" | "sha256" | "keccak256" = "none"
 ): boolean {
-  const key = ec.keyFromPublic(publicKey, "hex");
-
-  let msgHash;
-  switch (hashAlgorithm) {
-    case "none":
-      msgHash = message;
-      break;
-    case "sha256":
-      msgHash = createHash("sha256").update(message).digest();
-      break;
-    case "keccak256":
-      msgHash = keccak("keccak256").update(message).digest();
-      break;
-    default:
-      throw new Error("invalid hashAlgorithm");
-  }
-
-  return key.verify(msgHash, signature);
+  throw new Error("implement me!!");
 }
