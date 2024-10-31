@@ -1,28 +1,14 @@
 Here’s a list of commonly used `aptos` CLI commands. These commands are essential for interacting with the Aptos network, managing accounts, deploying Move modules, executing scripts, and querying the blockchain.
 
-### 1. **Account Management Commands**
+### 1. **Profile and Configuration Management**
 
-- **Create a new account**:
-
-  ```bash
-  aptos account create
-  ```
-
-  Creates a new account, generating a key pair and account address.
-
-- **Get account balance**:
+- **Configure the CLI**:
 
   ```bash
-  aptos account balance --account <account_address>
+  aptos init
   ```
 
-  Retrieves the balance of the specified account.
-
-- **Get account sequence number**:
-  ```bash
-  aptos account list --account <account_address>
-  ```
-  Fetches the sequence number (used for tracking the latest transaction) for the account.
+  Sets up the CLI with configuration settings, including selecting a network (testnet, mainnet, devnet) and setting up account keys.
 
 ### 2. **Compile and Build Commands**
 
@@ -48,13 +34,7 @@ Here’s a list of commonly used `aptos` CLI commands. These commands are essent
   aptos move publish --profile <profile_name>
   ```
 
-  Deploys the compiled Move modules to the Aptos blockchain. Requires the `--profile` option to specify which account to use (from `aptos.config.toml`).
-
-- **Run a Move script**:
-  ```bash
-  aptos move run --script-path <script_path> --args <arguments>
-  ```
-  Executes a Move script as a transaction. This command is useful for one-time operations or functions that need to interact with a deployed module.
+  Deploys the compiled Move modules to the Aptos blockchain. Requires the `--profile` option to specify which account to use (from `.aptos/config.toml`).
 
 ### 4. **Testing and Debugging Commands**
 
@@ -66,45 +46,25 @@ Here’s a list of commonly used `aptos` CLI commands. These commands are essent
 
   Executes tests in the `tests/` directory. It’s useful for verifying the functionality of Move modules before deployment.
 
-- **View transaction status**:
-  ```bash
-  aptos transaction show --hash <transaction_hash>
-  ```
-  Displays details about a specific transaction by its hash, including whether it succeeded or failed and any outputs or errors.
+### 5. **Account Management Commands**
 
-### 5. **Network and Blockchain Queries**
-
-- **Get current blockchain information**:
+- **Fund with Faucet**:
 
   ```bash
-  aptos info
+  aptos account fund-with-faucet
   ```
 
-  Shows general information about the current blockchain network, such as the latest block height, chain ID, and epoch.
+  Retrieves the balance of the specified account.
 
-- **Query on-chain data**:
-  ```bash
-  aptos view --module <module_name> --function <function_name> --args <arguments>
-  ```
-  Calls a view function on the blockchain, allowing you to fetch on-chain data without creating a transaction or modifying state.
-
-### 6. **Profile and Configuration Management**
-
-- **Configure the CLI**:
+- **Get account balance**:
 
   ```bash
-  aptos init
+  aptos account balance --account <account_address>
   ```
 
-  Sets up the CLI with configuration settings, including selecting a network (testnet, mainnet, devnet) and setting up account keys.
+  Retrieves the balance of the specified account.
 
-- **Add or manage profiles**:
-  ```bash
-  aptos config set-profile <profile_name>
-  ```
-  Manages multiple profiles within `aptos.config.toml`, which is helpful for switching between testnet, devnet, or custom configurations.
-
-### 7. **Example Workflow Commands**
+### 6. **Example Workflow Commands**
 
 To illustrate how some of these commands work together, here’s a common workflow for deploying and interacting with a Move module on Aptos:
 
@@ -124,17 +84,6 @@ To illustrate how some of these commands work together, here’s a common workfl
 
    ```bash
    aptos move publish --profile default
-   ```
-
-4. **Run a script to interact with the module**:
-
-   ```bash
-   aptos move run --script-path scripts/my_script.move --args <args>
-   ```
-
-5. **Verify the transaction status**:
-   ```bash
-   aptos transaction show --hash <transaction_hash>
    ```
 
 These commands cover the essentials for using the Aptos CLI. They’ll help you manage accounts, deploy and test Move modules, query blockchain data, and work with various network configurations.
