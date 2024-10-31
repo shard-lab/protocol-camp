@@ -1,5 +1,3 @@
-Here's a README for the Ethereum State Hands-on Session:
-
 # Ethereum State Hands-on Session
 
 ## 1. Overview

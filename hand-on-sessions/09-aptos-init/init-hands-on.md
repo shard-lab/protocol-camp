@@ -47,6 +47,7 @@ Next, create a module that stores and retrieves a simple value.
        }
 
        /// Function to get the stored value
+       #[view]
        public fun get_value(addr: address): u64 acquires Storage {
            if (!exists<Storage>(addr)) {
                return 0;
@@ -76,15 +77,14 @@ To verify that the module works as expected, let’s add a test.
    module SimpleStorageProject::SimpleStorage_test {
        use SimpleStorageProject::SimpleStorage;
        use std::signer;
-       use aptos_framework::aptos_account;
 
-       #[test]
-       public entry fun test_storage(account: signer) {
+       #[test(s = @0xC0FFEE)]
+       public fun test_storage(s: signer) {
            // Set a value in storage
-           SimpleStorage::set_value(&account, 100);
+           SimpleStorage::set_value(&s, 100);
 
            // Get the value and check if it's correct
-           let address = signer::address_of(&account);
+           let address = signer::address_of(&s);
            let value = SimpleStorage::get_value(address);
            assert!(value == 100, 0);
        }

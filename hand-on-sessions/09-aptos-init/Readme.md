@@ -1,20 +1,20 @@
-````markdown
-The `aptos move init` command initializes a **basic project structure** for Move smart contract development within an Aptos project. Running this command sets up a standard folder layout and essential files that make it easy to create, manage, and test Move modules.
+# Aptos Move Project Initialization Guide
 
-### 1. Running `aptos move init`
+## 1. Running `aptos move init`
 
-- This command creates a basic Move project structure, setting up the environment to write and test Move modules.
-- Example:
-  ```bash
-  aptos move init --name MyMoveProject
-  ```
-````
+The `aptos move init` command sets up a basic project structure for developing Move modules on Aptos. This command is essential for initializing a development environment, allowing you to write, test, and deploy Move modules seamlessly.
+
+### Example:
+
+```bash
+aptos move init --name MyMoveProject
+```
 
 Executing this command will create a directory named `MyMoveProject` containing all necessary folders and configuration files for Move development.
 
-### 2. Generated Folder Structure and Layout
+## 2. Generated Folder Structure and Layout
 
-After running `aptos move init`, the project folder will contain the following directories and files:
+After running `aptos move init`, your project folder will have the following structure:
 
 ```plaintext
 MyMoveProject/
@@ -27,12 +27,12 @@ MyMoveProject/
     └── <Move test files>
 ```
 
-#### Description of Each Folder and File
+### Description of Each Folder and File
 
 1. **Move.toml**
 
-   - This is the configuration file for the project, essential for every Move project.
-   - It defines project settings, including dependencies, network information, and compilation settings.
+   - The configuration file for your Move project, required for project management and dependency tracking.
+   - Defines project details such as dependencies, network configurations, and compilation settings.
    - Example:
 
      ```toml
@@ -46,25 +46,25 @@ MyMoveProject/
 
 2. **sources/**
 
-   - This folder is where you write Move module files.
-   - Each Move module file in this folder uses the `.move` extension.
-   - For instance, a simple storage module called `SimpleStorage.move` could be placed in this folder.
+   - Contains the Move module files where you define your main functionality and state management.
+   - Each module file here has a `.move` extension.
+   - Example: `SimpleStorage.move` for a simple storage module.
 
 3. **scripts/**
 
-   - The `scripts/` folder is where Move script files are stored. Move scripts are transaction scripts that perform specific tasks.
-   - Unlike module functions that manage state internally, scripts can be directly submitted as transactions to interact with the blockchain.
+   - Stores Move script files, which are transaction scripts designed to perform specific tasks on the blockchain.
+   - Unlike module functions that internally manage state, scripts here can be submitted as transactions to interact with the blockchain.
 
 4. **tests/**
-   - The `tests/` folder contains **test code** for the Move modules. You can write unit tests, scenario tests, and more here to ensure that each module behaves as expected.
-   - Using attributes like `#[test]`, you can verify the behavior of individual functions. Test files are also `.move` files, just like module files.
+   - Contains test code for the Move modules, enabling you to validate the functionality and logic of each module.
+   - Test files, also in `.move` format, allow you to verify behaviors using `#[test]` attributes, ensuring that modules work as expected under various scenarios.
 
-### 3. Workflow in a Project
+## 3. Workflow in a Project
 
-- **Module Development**: Write your Move modules in the `sources/` folder, where you define state management, operations, and transaction functions.
-- **Script Writing**: Create scripts in the `scripts/` folder to perform specific functions by submitting them as transactions that interact with the blockchain.
-- **Testing**: Write test code in the `tests/` folder to validate each module’s functionality and logic. Testing helps catch bugs early through simulation.
+- **Module Development**: Write and organize your core Move modules in the `sources/` folder. Here, you define functions, state management, and any operations required for your project.
+- **Script Writing**: Create transaction scripts in the `scripts/` folder. These scripts can be submitted to perform specific functions on the blockchain by invoking operations from your modules.
+- **Testing**: Write and manage test cases in the `tests/` folder to verify module behavior and logic before deployment. Testing helps simulate scenarios, catching bugs and ensuring reliability.
 
-### Summary
+## Summary
 
-The `aptos move init` command sets up a basic folder structure tailored for Move project development. The folders have dedicated purposes: `sources/` for module files, `scripts/` for transaction scripts, and `tests/` for testing. The `Move.toml` file manages dependencies and project configurations, allowing easy customization and setup for Move development in Aptos.
+The `aptos move init` command structures your project for effective Move development on Aptos. With a clear separation of concerns—modules in `sources/`, transaction scripts in `scripts/`, and tests in `tests/`—this setup enables organized and efficient project management. The `Move.toml` file provides essential configuration, including dependency management and network information, allowing easy customization for Aptos Move development.

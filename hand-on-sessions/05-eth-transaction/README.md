@@ -1,5 +1,3 @@
-Here’s a README for the Ethereum Transaction Hands-on Session:
-
 # Ethereum Transaction Hands-on Session
 
 ## 1. Overview

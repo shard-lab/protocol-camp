@@ -1,5 +1,3 @@
-Here's the revised README without the "Setup Instructions" section:
-
 # Ethereum Account Hands-on Session
 
 ## 1. Overview

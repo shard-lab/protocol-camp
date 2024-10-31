@@ -25,6 +25,7 @@ describe("#Aptos Transaction Hands-on Session", function () {
       );
     }
 
+    // Ensure that the sender has sufficient balance
     sender = Account.fromPrivateKey({
       privateKey: new Ed25519PrivateKey(privateKeyHex),
     });
