@@ -8,7 +8,7 @@ module protocol::structability {
         let _ = DropStruct { value: 42 };
     }
 
-    struct CopyStruct has copy {
+    struct CopyStruct {
         value: u64,
     }
 
