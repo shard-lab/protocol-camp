@@ -1,0 +1,14 @@
+{
+  "name": "16-btc-utxo",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "mocha test/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "decimal.js": "^10.4.3"
+  }
+}
