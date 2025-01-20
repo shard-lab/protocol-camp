@@ -2,39 +2,52 @@
 
 ## 1. Overview
 
-This hands-on session focuses on implementing and testing a simplified UTXO (Unspent Transaction Output) model using TypeScript. You will create a minimal blockchain-like transaction flow with the following key components:
+In this hands-on exercise, you will implement a simplified UTXO-based transaction system in TypeScript. The goal is to understand how transactions and unspent outputs (UTXOs) are tracked and updated in a basic blockchain-like system. You’ll complete functions that handle collecting inputs, creating outputs, and maintaining a list of unspent outputs (getUnspentUTXOs).
 
-UTXO: Represents a piece of currency owned by a user.
-
-Wallet: Stores a collection of UTXOs for a specific user.
-
-Transaction: Defines how UTXOs move from one user to another.
+By the end of this exercise, you should have a deeper understanding of the UTXO model, how transactions are formed, and how balances are derived in Bitcoin-like systems.
 
 ## 2. Test Description
 
-The project includes a set of test cases (test/utxo.test.ts) that validate:
+Your primary tasks revolve around completing the following methods in the `Node` class
 
-1. Collecting Inputs
-- Ensures that a transaction gathers enough UTXOs from the sender to cover the intended transfer amount.
+1. `getAllUTXOs()`
 
-2. Transaction Validation
-- Checks if the total input amount is greater than or equal to the send amount.
-- Throws an error if there are insufficient funds.
+- Returns all unspent outputs across all addresses.
+- This involves collecting outputs from every transaction and removing those that have already been spent as inputs in subsequent transactions.
 
-3. Creating Outputs
-- Splits the total input amount into the recipient’s portion and the sender’s leftover (change).
-- Ensures correct distribution of any remaining balance back to the sender.
+2. `getUTXOs(address: string)`
 
-4. Applying Transactions
-- Updates the sender's and recipient's Wallet objects by removing and adding appropriate UTXOs.
-- Verifies final balances for both parties.
+- Returns only the unspent outputs owned by the specified address.
 
-5. Full Execution
-- Runs all steps (collectInputs, validateTransaction, createOutputs, applyTransaction) via execute() and checks the end-state balances.
-- There are Success Cases (transactions should finalize correctly) and Fail Cases (transactions should fail due to insufficient funds).
+3. `gatherInputs()`
 
+- Finds enough unspent outputs owned by sender to cover amount.
+- Returns an array of input references ({ txId, vOut }) or throws an error if insufficient funds.
 
-## 3. How to Run Tests
+4. `createOutputs()`
+
+- Creates output data for recipient (covering the requested amount) and sends any leftover (change) back to senderAddress.
+
+## 3. UTXO and Transaction Overview
+
+### UTXO
+
+- UTXO stands for Unspent Transaction Output. Once a transaction output is spent in a subsequent transaction, it can no longer be used again.
+- In this project, a UTXO contains:
+  - txId: The transaction ID where the output was created.
+  - vOut: The index of the output in that transaction.
+  - address: The recipient’s identifier (akin to a wallet address).
+  - amount: The numeric amount of currency allocated to this output.
+
+### Transaction
+
+- A transaction contains:
+  - id: A unique identifier for the transaction (in real Bitcoin, this is a hash).
+  - inputs: Array of objects referencing previously created outputs ({ txId, vOut }).
+  - outputs: Array of new UTXO objects created by this transaction.
+- When a transaction is executed (and validated), the referenced UTXOs are considered spent, and the new outputs become unspent until they’re spent by some future transaction.
+
+## 4. How to Run Tests
 
 Follow these steps to run the tests:
 
@@ -47,21 +60,13 @@ Follow these steps to run the tests:
    ```
    npm run test
    ```
-4. Check the test results. All tests should pass.
 
-## 4. What to Implement
+4. You will see two categories of tests:
 
-You will focus on completing two crucial methods in the Transaction class (transaction.ts):
+- Basic functionality tests (in utxo.basic.test.ts), which check your implementations of:
+  - getUTXOs
+  - gatherInputs
+  - createOutputs
+- Scenario tests (in utxo.scenario.test.ts), which simulate realistic usage with multiple addresses and transactions.
 
-1. `collectInputs()`
-
-- Collect enough UTXOs from the sender’s wallet to cover the transaction amount.
-- Store these UTXOs in the transaction’s inputs array.
-- Ensure the sum of these inputs meets or exceeds this.amount.
-
-2. `createOutputs()`
-
-- Create a UTXO for the recipient with the amount being sent.
-- If there is any leftover balance (total inputs - send amount), create a UTXO for the sender.
-- Push these new UTXOs to the transaction’s outputs array.
-
+Your goal is to ensure all tests pass by completing the TODO sections in the `Node` class.

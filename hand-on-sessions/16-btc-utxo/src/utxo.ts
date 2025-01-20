@@ -1,88 +1,122 @@
-import { Decimal } from 'decimal.js';
+import { Decimal } from "decimal.js";
+import { randomUUID } from "crypto";
 
 export class UTXO {
-    public owner: string;
-    public amount: Decimal;
+  public txId: string;
+  public vOut: number;
+  public address: string;
+  public amount: Decimal;
 
-    constructor(owner: string, amount: number | Decimal) {
-        this.owner = owner;
-        this.amount = typeof amount === 'number' ? new Decimal(amount) : amount;
-    }
+  constructor(txId: string, vOut: number, address: string, amount: number | Decimal) {
+    this.txId = txId;
+    this.vOut = vOut;
+    this.address = address;
+    this.amount = new Decimal(amount);
   }
-  
-  export class Wallet {
-    public name: string;
-    public utxos: UTXO[] = [];
+}
 
-    constructor(name: string, utxos: UTXO[] = []) {
-        this.name = name;
-        this.utxos = utxos;
-    }
+export class Transaction {
+  public id: string;
+  public inputs: Array<{ txId: string; vOut: number }>;
+  public outputs: UTXO[];
 
-    public getBalance(): Decimal {
-      return this.utxos.reduce((sum, utxo) => sum.add(utxo.amount), new Decimal(0));
-    }
+  constructor(
+    id: string,
+    inputs: Array<{ txId: string; vOut: number }>,
+    outputs: UTXO[]
+  ) {
+    this.id = id;
+    this.inputs = inputs;
+    this.outputs = outputs;
   }
-  
-  export class Transaction {
-    public sender: Wallet;
-    public recipient: Wallet;
-    public amount: Decimal;
-    public inputs: UTXO[] = [];
-    public outputs: UTXO[] = [];
-  
-    constructor(
-      sender: Wallet,
-      recipient: Wallet,
-      amount: number | Decimal
-    ) {
-        this.sender = sender;
-        this.recipient = recipient;
-        this.amount = typeof amount === 'number' ? new Decimal(amount) : amount;
-    }
 
-    public getTotalInputAmount(): Decimal {
-      return this.inputs.reduce((sum, utxo) => sum.add(utxo.amount), new Decimal(0));
-    }
+  static create(
+    inputs: Array<{ txId: string; vOut: number }>,
+    outputsData: Array<{ address: string; amount: number | Decimal }>
+  ): Transaction {
+    const txId = randomUUID();
+    const outputs = outputsData.map((out, idx) => {
+      return new UTXO(txId, idx, out.address, out.amount);
+    });
+    return new Transaction(txId, inputs, outputs);
+  }
+}
 
-    public getTotalOutputAmount(): Decimal {
-      return this.outputs.reduce((sum, utxo) => sum.add(utxo.amount), new Decimal(0));
+export class Node {
+  public transactions: Transaction[];
+
+  constructor() {
+    this.transactions = [];
+  }
+
+  public getAllUTXOs(): UTXO[] {
+    throw new Error("Implement me!");
+  }
+
+  public getUTXOs(address: string): UTXO[] {
+    throw new Error("Implement me!");
+  }
+
+  public gatherInputs(sender: string, amount: number | Decimal): Array<{ txId: string; vOut: number }> {
+    const amt = new Decimal(amount);
+    const utxos = this.getUTXOs(sender);
+    let collected = new Decimal(0);
+    const inputs: Array<{ txId: string; vOut: number }> = [];
+
+    // TODO - implements here!: collect enough UTXOs to cover the amount
+
+    if (collected.lt(amt)) {
+      throw new Error(`Insufficient funds for ${sender}`);
     }
-  
-    public collectInputs(): void {
-        throw new Error("Implement me");
+    return inputs;
+  }
+
+  public createOutputs(
+    sender: string,
+    recipient: string,
+    inputs: Array<{ txId: string; vOut: number }>,
+    amount: number | Decimal
+  ): Array<{ address: string; amount: Decimal }> {
+    const amt = new Decimal(amount);
+    let totalInput = new Decimal(0);
+    const utxos = this.getAllUTXOs(); 
+    const outputs: Array<{ address: string; amount: Decimal }> = [];
+    // TODO: implements here!
+
+    return outputs;
+  }
+
+  public validateTransaction(tx: Transaction) {
+    const utxos = this.getAllUTXOs();
+    const totalInput = tx.inputs.reduce((sum, i) => {
+      const utxo = utxos.find((u) => u.txId === i.txId && u.vOut === i.vOut);
+      if (!utxo) {
+        throw new Error("Input not found or spent");
       }
-    
-    public validateTransaction(): void {
-        const totalInput = this.getTotalInputAmount();
-        if (totalInput.lt(this.amount)) {
-            throw new Error("Insufficient funds");
-        }
-    }
-  
-    public createOutputs(): void {
-        throw new Error("Implement me");
-    }
-  
-    public applyTransaction(): void {
-        this.sender.utxos = this.sender.utxos.filter(
-            (utxo) => !this.inputs.includes(utxo)
-        );
+      return sum.add(utxo.amount);
+    }, new Decimal(0));
 
-        for (const out of this.outputs) {
-            if (out.owner === this.sender.name) {
-            this.sender.utxos.push(out);
-            } else if (out.owner === this.recipient.name) {
-            this.recipient.utxos.push(out);
-            }
-        }
-    }
+    const totalOutput = tx.outputs.reduce((sum, o) => sum.add(o.amount), new Decimal(0));
 
-    public execute(): void {
-      this.collectInputs();
-      this.validateTransaction();
-      this.createOutputs();
-      this.applyTransaction();
+    if (totalInput.lt(totalOutput)) {
+      throw new Error(`Transaction invalid: totalInput < totalOutput`);
     }
   }
-  
+
+  public executeTransaction(tx: Transaction) {
+    this.transactions.push(tx);
+  }
+
+  public processTransaction(
+    sender: string,
+    recipient: string,
+    amount: number | Decimal
+  ): Transaction {
+    const inputs = this.gatherInputs(sender, amount);
+    const outputsData = this.createOutputs(sender, recipient, inputs, amount);
+    const tx = Transaction.create(inputs, outputsData);
+    this.validateTransaction(tx);
+    this.executeTransaction(tx);
+    return tx;
+  }
+}
