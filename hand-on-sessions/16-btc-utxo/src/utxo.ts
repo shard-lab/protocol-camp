@@ -18,12 +18,12 @@ export class UTXO {
 export class Transaction {
   public id: string;
   public inputs: Array<{ txId: string; vOut: number }>;
-  public outputs: UTXO[];
+  public outputs: Array<{ address: string; amount: number | Decimal }>;
 
   constructor(
     id: string,
     inputs: Array<{ txId: string; vOut: number }>,
-    outputs: UTXO[]
+    outputs: Array<{ address: string; amount: number | Decimal }>
   ) {
     this.id = id;
     this.inputs = inputs;
@@ -35,10 +35,7 @@ export class Transaction {
     outputsData: Array<{ address: string; amount: number | Decimal }>
   ): Transaction {
     const txId = randomUUID();
-    const outputs = outputsData.map((out, idx) => {
-      return new UTXO(txId, idx, out.address, out.amount);
-    });
-    return new Transaction(txId, inputs, outputs);
+    return new Transaction(txId, inputs, outputsData);
   }
 }
 
@@ -49,74 +46,56 @@ export class Node {
     this.transactions = [];
   }
 
-  public getAllUTXOs(): UTXO[] {
-    throw new Error("Implement me!");
-  }
-
-  public getUTXOs(address: string): UTXO[] {
-    throw new Error("Implement me!");
-  }
-
-  public gatherInputs(sender: string, amount: number | Decimal): Array<{ txId: string; vOut: number }> {
-    const amt = new Decimal(amount);
-    const utxos = this.getUTXOs(sender);
-    let collected = new Decimal(0);
-    const inputs: Array<{ txId: string; vOut: number }> = [];
-
-    // TODO - implements here!: collect enough UTXOs to cover the amount
-
-    if (collected.lt(amt)) {
-      throw new Error(`Insufficient funds for ${sender}`);
-    }
-    return inputs;
-  }
-
-  public createOutputs(
-    sender: string,
-    recipient: string,
-    inputs: Array<{ txId: string; vOut: number }>,
-    amount: number | Decimal
-  ): Array<{ address: string; amount: Decimal }> {
-    const amt = new Decimal(amount);
-    let totalInput = new Decimal(0);
-    const utxos = this.getAllUTXOs(); 
-    const outputs: Array<{ address: string; amount: Decimal }> = [];
-    // TODO: implements here!
-
-    return outputs;
-  }
-
-  public validateTransaction(tx: Transaction) {
-    const utxos = this.getAllUTXOs();
-    const totalInput = tx.inputs.reduce((sum, i) => {
-      const utxo = utxos.find((u) => u.txId === i.txId && u.vOut === i.vOut);
-      if (!utxo) {
-        throw new Error("Input not found or spent");
-      }
-      return sum.add(utxo.amount);
-    }, new Decimal(0));
-
-    const totalOutput = tx.outputs.reduce((sum, o) => sum.add(o.amount), new Decimal(0));
-
-    if (totalInput.lt(totalOutput)) {
-      throw new Error(`Transaction invalid: totalInput < totalOutput`);
-    }
-  }
-
-  public executeTransaction(tx: Transaction) {
-    this.transactions.push(tx);
-  }
-
-  public processTransaction(
+  public send(
     sender: string,
     recipient: string,
     amount: number | Decimal
   ): Transaction {
-    const inputs = this.gatherInputs(sender, amount);
-    const outputsData = this.createOutputs(sender, recipient, inputs, amount);
-    const tx = Transaction.create(inputs, outputsData);
-    this.validateTransaction(tx);
-    this.executeTransaction(tx);
+    const { inputs, outputs } = this.createTransaction(sender, recipient, amount);
+    const tx = Transaction.create(inputs, outputs);
+    this.verifyTransaction(tx);
+    this.transactions.push(tx);
     return tx;
+  }
+
+  public getAllUTXOs(): UTXO[] {
+    throw new Error("Implement me");
+  }
+
+  public getUTXOs(address: string): UTXO[] {
+    return this.getAllUTXOs().filter((u) => u.address === address);
+  } 
+
+  private createTransaction(
+    sender: string,
+    recipient: string,
+    amount: number | Decimal
+  ): Transaction {
+    throw new Error("Implement me");
+  }
+
+  private verifyTransaction(tx: Transaction) {
+    const allUTXOs = this.getAllUTXOs();
+
+    const totalInput = tx.inputs.reduce((sum, input) => {
+      const utxo = allUTXOs.find(
+        (u) => u.txId === input.txId && u.vOut === input.vOut
+      );
+      if (!utxo) {
+        throw new Error("Input not found or already spent");
+      }
+      return sum.add(utxo.amount);
+    }, new Decimal(0));
+
+    const totalOutput = tx.outputs.reduce(
+      (sum, o) => sum.add(new Decimal(o.amount)),
+      new Decimal(0)
+    );
+
+    if (totalInput.lt(totalOutput)) {
+      throw new Error(
+        `Invalid transaction: totalInput < totalOutput`
+      );
+    }
   }
 }
