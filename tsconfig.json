@@ -9,6 +9,16 @@
     "outDir": "./dist",
     "rootDir": "./"
   },
-  "include": ["hand-on-sessions/**/*", "assignments/**/*", "hardhat.config.ts"],
+  "include": [
+    "hand-on-sessions/**/*",
+    "assignments/**/*",
+    "hardhat.config.ts",
+    "basic/ethereum/04-eth-account",
+    "basic/ethereum/05-eth-transaction",
+    "basic/ethereum/06-eth-state",
+    "basic/core/03-pow",
+    "basic/core/02-merkletree",
+    "basic/core/01-ecdsa"
+  ],
   "exclude": ["node_modules"]
 }

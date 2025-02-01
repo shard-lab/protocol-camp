@@ -1,0 +1,13 @@
+{
+  "name": "ethers-account",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "mocha tests/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}
