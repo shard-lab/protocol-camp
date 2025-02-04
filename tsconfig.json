@@ -13,12 +13,16 @@
     "hand-on-sessions/**/*",
     "assignments/**/*",
     "hardhat.config.ts",
-    "basic/ethereum/04-eth-account",
-    "basic/ethereum/05-eth-transaction",
-    "basic/ethereum/06-eth-state",
-    "basic/core/03-pow",
-    "basic/core/02-merkletree",
-    "basic/core/01-ecdsa"
+    "basics/ethereum/04-eth-account",
+    "basics/ethereum/05-eth-transaction",
+    "basics/ethereum/06-eth-state",
+    "basics/core/03-pow",
+    "basics/core/02-merkletree",
+    "basics/core/01-ecdsa",
+    "basics/aptos/14-aptos-multi-agent-transaction",
+    "basics/aptos/aptos-sdk-sponsoring-transactions",
+    "basics/aptos/aptos-sdk-account/aptos-sdk-transaction",
+    "basics/aptos/aptos-sdk-account"
   ],
   "exclude": ["node_modules"]
 }
