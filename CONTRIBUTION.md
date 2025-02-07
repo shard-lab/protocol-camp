@@ -1,12 +1,53 @@
-# 🚀 Contribution Guide
+# 🚀 Contribution Guide  
 
-Thank you for your interest in contributing to our project! We welcome all contributions and appreciate your help in improving this repository.  
+Thank you for your interest in contributing to our project! We focus on **learning through hands-on implementation of core concepts**. Instead of simply providing explanations, we create structured exercises that guide learners to actively write and test code, deepening their understanding through experience.  
 
----
+This guide explains how to contribute by designing and improving hands-on learning materials.  
 
-## How to Contribute
+<br>
 
-Contributions are welcomed via pull requests. The basic workflow is as follows:
+## 🛠 How to Contribute  
+
+Our contribution process is structured around **designing learning experiences**, not just writing code. Learners engage with exercises by filling in missing implementations, passing tests, and interacting with structured challenges.
+
+There are two ways to contribute:  
+1. **Implementing an existing learning module** (An issue already exists for the topic.)  
+2. **Proposing a new learning module** (You have an idea for a new learning experience.)  
+
+### 🏗 1. Implement an Existing Learning Module  
+
+If an issue is already registered, you can contribute by designing the hands-on learning experience for it.  
+Follow the **Standard Contribution Process** below.  
+
+### 📝 2. Propose a New Learning Module  
+
+If you want to introduce a new hands-on learning experience, follow these steps:  
+
+#### 1️⃣ Open an Issue  
+Before writing any code, create an issue to propose your idea.  
+- Clearly define the **learning objective** and **key concepts** covered.  
+- Outline how learners will interact with the material (e.g., filling in missing functions, debugging test cases, or designing a solution).  
+- Use the [Educational Module Proposal Template](.github/ISSUE_TEMPLATE/educational-module-proposal.md).  
+
+#### 2️⃣ Discuss & Refine the Idea  
+- Engage in discussion with maintainers and contributors.  
+- Ensure the topic aligns with our **hands-on implementation** approach.  
+- Iterate on the proposal before starting development.  
+
+#### 3️⃣ Implement the Learning Module  
+- Once the proposal is approved, create a new branch and start developing the exercise.  
+- Structure the module so that learners actively **write and test code** (e.g., providing failing tests that they must fix, or function stubs they must complete).  
+
+#### 4️⃣ Submit a Pull Request (PR)  
+- When your module is ready, submit a **Pull Request (PR)** following the process below.  
+- Provide a clear explanation of the educational goals.  
+- Ensure the module is well-documented and includes the necessary test cases.  
+
+<br>
+
+## 🔧 Standard Contribution Process  
+
+Follow these steps when contributing new learning materials or improvements: 
 
 ### 1️⃣ Fork the Repository  
 Click on the **Fork** button in the top-right corner of this repository to create your own copy on GitHub.
