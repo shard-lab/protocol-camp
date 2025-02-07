@@ -9,6 +9,12 @@ Blockchain is a vast and complex field, making it challenging for developers to 
 
 <br>
 
+## Contributing
+
+We welcome contributions from the community! If you're interested in helping improve these learning materials or adding new educational modules, please check out our [CONTRIBUTION.md](./CONTRIBUTION.md) guide. Whether you want to fix a bug, improve documentation, or propose a new learning module, your contributions are valuable in making this resource better for everyone.
+
+<br>
+
 ## Repository Structure
 
 This repository is organized into two main sections:
@@ -34,7 +40,7 @@ This repository is organized into two main sections:
    npm install
    ```
 
-Now you’re ready to explore, modify, and implement blockchain concepts yourself.
+Now you're ready to explore, modify, and implement blockchain concepts yourself.
 
 <br>
 
