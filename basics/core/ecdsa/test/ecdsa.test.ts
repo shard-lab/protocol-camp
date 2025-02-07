@@ -2,8 +2,7 @@ import { generateKeyPair, signMessage, verifySignature } from "../src/ecdsa";
 import { expect } from "chai";
 
 describe("#ECDSA Hands-on Session", function () {
-  const alicePrivateKey =
-    "eaf85898356aeb4c286fdb3458a65f6e0596bb57ea1bc96fc486c371773b9643";
+  const alicePrivateKey = "eaf85898356aeb4c286fdb3458a65f6e0596bb57ea1bc96fc486c371773b9643";
   const alicePublicKey =
     "04a08f1fe79a520a436de3f48781725652f4ee38db584b92f54c8832f6abd50c2361c97e99aeb3284d7f7a00c4ad8d6c832944b999e4ae862cd0ba610d533e4306";
 
@@ -32,11 +31,7 @@ describe("#ECDSA Hands-on Session", function () {
 
     it("should verify Alice's signature (raw) with her public key", function () {
       const message = "I am Alice";
-      const isValid = verifySignature(
-        message,
-        rawMessageSignature,
-        alicePublicKey
-      );
+      const isValid = verifySignature(message, rawMessageSignature, alicePublicKey);
       expect(isValid).to.be.true;
     });
 

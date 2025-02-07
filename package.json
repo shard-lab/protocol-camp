@@ -3,29 +3,34 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "hand-on-sessions/*",
-    "assignments/*"
+    "advanced/*",
+    "basic/*"
   ],
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.29.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@typechain/ethers-v5": "^7.2.0",
     "@typechain/hardhat": "^2.3.1",
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
-    "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
+    "@typescript-eslint/eslint-plugin": "^8.23.0",
+    "@typescript-eslint/parser": "^8.23.0",
     "chai": "^4.3.4",
     "dotenv": "^16.4.5",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
     "ethers": "^5.5.1",
     "hardhat": "^2.22.5",
     "mocha": "^10.7.3",
+    "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "typechain": "^5.2.0",
     "typescript": "^5.6.2"
   },
-  "scripts": {},
-  "dependencies": {
-    "@aptos-labs/wallet-adapter-ant-design": "^3.0.16",
-    "@aptos-labs/wallet-adapter-react": "^3.7.2"
+  "scripts": {
+    "lint": "eslint \"**/*.{js,ts}\"",
+    "lint:fix": "eslint \"**/*.{js,ts}\" --fix",
+    "format": "prettier --write \"**/*.{ts,js,json}\""
   }
 }

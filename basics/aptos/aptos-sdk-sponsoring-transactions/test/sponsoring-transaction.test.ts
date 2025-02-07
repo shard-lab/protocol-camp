@@ -28,9 +28,9 @@ describe("#Aptos Sponsoring Transactions Hands-on Session", function () {
     //
     //
 
-    expect(
-      await aptos.getAccountAPTAmount({ accountAddress: sender.accountAddress })
-    ).to.be.equal(1_000_000);
+    expect(await aptos.getAccountAPTAmount({ accountAddress: sender.accountAddress })).to.be.equal(
+      1_000_000
+    );
     expect(
       await aptos.getAccountAPTAmount({
         accountAddress: destination.accountAddress,

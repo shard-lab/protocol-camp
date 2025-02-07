@@ -46,11 +46,7 @@ export class Node {
     this.transactions = [];
   }
 
-  public send(
-    sender: string,
-    recipient: string,
-    amount: number | Decimal
-  ): Transaction {
+  public send(sender: string, recipient: string, amount: number | Decimal): Transaction {
     const { inputs, outputs } = this.createTransaction(sender, recipient, amount);
     const tx = Transaction.create(inputs, outputs);
     this.verifyTransaction(tx);
@@ -64,7 +60,7 @@ export class Node {
 
   public getUTXOs(address: string): UTXO[] {
     return this.getAllUTXOs().filter((u) => u.address === address);
-  } 
+  }
 
   private createTransaction(
     sender: string,
@@ -78,9 +74,7 @@ export class Node {
     const allUTXOs = this.getAllUTXOs();
 
     const totalInput = tx.inputs.reduce((sum, input) => {
-      const utxo = allUTXOs.find(
-        (u) => u.txId === input.txId && u.vOut === input.vOut
-      );
+      const utxo = allUTXOs.find((u) => u.txId === input.txId && u.vOut === input.vOut);
       if (!utxo) {
         throw new Error("Input not found or already spent");
       }
@@ -93,9 +87,7 @@ export class Node {
     );
 
     if (totalInput.lt(totalOutput)) {
-      throw new Error(
-        `Invalid transaction: totalInput < totalOutput`
-      );
+      throw new Error(`Invalid transaction: totalInput < totalOutput`);
     }
   }
 }

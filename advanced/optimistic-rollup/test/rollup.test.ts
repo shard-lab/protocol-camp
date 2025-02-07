@@ -1,11 +1,7 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { Rollup, Rollup__factory } from "../typechain";
-import {
-  generateBlockMerkleRoot,
-  generateMerkleProof,
-  generateStateMerkleRoot,
-} from "./helper";
+import { generateBlockMerkleRoot, generateMerkleProof, generateStateMerkleRoot } from "./helper";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 describe("Rollup", async function () {
@@ -49,9 +45,7 @@ describe("Rollup", async function () {
     const initialBlockMerkleRoot = generateBlockMerkleRoot(initialTxs);
 
     // Deploy Rollup contract with initial state
-    const RollupFactory = (await ethers.getContractFactory(
-      "Rollup"
-    )) as Rollup__factory;
+    const RollupFactory = (await ethers.getContractFactory("Rollup")) as Rollup__factory;
     rollup = await RollupFactory.deploy(
       finalizationPeriod,
       initialBlockMerkleRoot,
@@ -70,12 +64,8 @@ describe("Rollup", async function () {
   });
 
   it("should propose a new state and emit an event", async function () {
-    const blockMerkleRoot = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes("blockRoot")
-    );
-    const stateMerkleRoot = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes("stateRoot")
-    );
+    const blockMerkleRoot = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("blockRoot"));
+    const stateMerkleRoot = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("stateRoot"));
 
     const tx = await rollup.proposeState(blockMerkleRoot, stateMerkleRoot);
 
@@ -89,19 +79,13 @@ describe("Rollup", async function () {
   });
 
   it("should not allow finalizing a proposed state before the finalization period", async function () {
-    const blockMerkleRoot = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes("blockRoot")
-    );
-    const stateMerkleRoot = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes("stateRoot")
-    );
+    const blockMerkleRoot = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("blockRoot"));
+    const stateMerkleRoot = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("stateRoot"));
 
     await rollup.proposeState(blockMerkleRoot, stateMerkleRoot);
 
     // Try to finalize immediately
-    await expect(rollup.finalizeState(0)).to.be.revertedWith(
-      "Finalization period not met"
-    );
+    await expect(rollup.finalizeState(0)).to.be.revertedWith("Finalization period not met");
   });
 
   it("should not allow finalizing a state with an invalid index", async function () {
@@ -109,12 +93,8 @@ describe("Rollup", async function () {
   });
 
   it("should finalize a proposed state after the finalization period and emit an event", async function () {
-    const blockMerkleRoot = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes("blockRoot")
-    );
-    const stateMerkleRoot = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes("stateRoot")
-    );
+    const blockMerkleRoot = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("blockRoot"));
+    const stateMerkleRoot = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("stateRoot"));
 
     await rollup.proposeState(blockMerkleRoot, stateMerkleRoot);
 
@@ -201,21 +181,12 @@ describe("Rollup", async function () {
     await rollup.connect(user).proposeState(blockMerkleRoot, stateMerkleRoot);
 
     // Create fake invalid proofs
-    const invalidProof = [
-      ethers.utils.keccak256(ethers.utils.toUtf8Bytes("invalidProof")),
-    ];
+    const invalidProof = [ethers.utils.keccak256(ethers.utils.toUtf8Bytes("invalidProof"))];
 
     await expect(
       rollup
         .connect(user)
-        .submitFraudProof(
-          0,
-          initialState[0],
-          invalidProof,
-          [tx],
-          initialState[0],
-          invalidProof
-        )
+        .submitFraudProof(0, initialState[0], invalidProof, [tx], initialState[0], invalidProof)
     ).to.be.revertedWith("Invalid initial account state proof");
   });
 
@@ -258,9 +229,7 @@ describe("Rollup", async function () {
       ethers.utils.toUtf8Bytes("invalidBlockRoot")
     ); // Use an invalid block root
 
-    await rollup
-      .connect(user)
-      .proposeState(invalidBlockMerkleRoot, stateMerkleRoot);
+    await rollup.connect(user).proposeState(invalidBlockMerkleRoot, stateMerkleRoot);
 
     // Create valid proofs for the initial state
     const initialStateHashes = initialState.map((state) =>
@@ -503,14 +472,7 @@ describe("Rollup", async function () {
 
     const txResult = await rollup
       .connect(user)
-      .submitFraudProof(
-        0,
-        initialState[0],
-        stateProof,
-        [tx],
-        afterState[0],
-        stateProof
-      );
+      .submitFraudProof(0, initialState[0], stateProof, [tx], afterState[0], stateProof);
 
     // Ensure that the proposed state has been invalidated
     expect(await rollup.getProposedLength()).to.equal(0);

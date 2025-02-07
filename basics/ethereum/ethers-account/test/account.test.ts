@@ -43,9 +43,7 @@ describe("#Ethers Account Hands-on Session", () => {
 
     // Set up provider using Infura(https://app.infura.io/) for the Ethereum Sepolia test network
     // Replace <API Key> with your Infura project key
-    const provider = new ethers.providers.JsonRpcProvider(
-      "https://sepolia.infura.io/v3/<API Key>"
-    );
+    const provider = new ethers.providers.JsonRpcProvider("https://sepolia.infura.io/v3/<API Key>");
 
     // Get Ether from Sepolia faucet for the wallet address (https://faucets.chain.link/sepolia)
     const balance = await provider.getBalance(wallet.address);

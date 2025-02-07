@@ -10,14 +10,17 @@ describe("Scenario Tests", () => {
   });
 
   it("Success Scenario: Alice -> Bob 2.5", () => {
-    const genesis = Transaction.create([], [
-      { address: "Alice", amount: 3 },
-      { address: "Bob", amount: 2 },
-    ]);
+    const genesis = Transaction.create(
+      [],
+      [
+        { address: "Alice", amount: 3 },
+        { address: "Bob", amount: 2 },
+      ]
+    );
     node.transactions.push(genesis);
     node.send("Alice", "Bob", 2.5);
 
-    const aliceUtxos = node.getUTXOs("Alice"); 
+    const aliceUtxos = node.getUTXOs("Alice");
     expect(aliceUtxos).to.have.lengthOf(1);
     expect(aliceUtxos[0].amount.toNumber()).to.eq(0.5);
 
@@ -28,9 +31,7 @@ describe("Scenario Tests", () => {
   });
 
   it("Success Scenario: Check spent outputs are excluded", () => {
-    const genesis = Transaction.create([], [
-      { address: "Alice", amount: 3 },
-    ]);
+    const genesis = Transaction.create([], [{ address: "Alice", amount: 3 }]);
     node.transactions.push(genesis);
     node.send("Alice", "Bob", 2);
 
@@ -44,9 +45,7 @@ describe("Scenario Tests", () => {
   });
 
   it("Success Scenario: multiple transfers", () => {
-    const genesis = Transaction.create([], [
-      { address: "Alice", amount: 5 },
-    ]);
+    const genesis = Transaction.create([], [{ address: "Alice", amount: 5 }]);
     node.transactions.push(genesis);
     node.send("Alice", "Bob", 2);
     node.send("Bob", "Charlie", 1.5);
@@ -62,9 +61,7 @@ describe("Scenario Tests", () => {
   });
 
   it("Failure Scenario: insufficient funds", () => {
-    const genesis = Transaction.create([], [
-      { address: "Alice", amount: 1 },
-    ]);
+    const genesis = Transaction.create([], [{ address: "Alice", amount: 1 }]);
     node.transactions.push(genesis);
     expect(() => {
       node.send("Alice", "Bob", 2);

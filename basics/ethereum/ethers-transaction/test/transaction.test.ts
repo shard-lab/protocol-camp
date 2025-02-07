@@ -12,19 +12,13 @@ describe("#Ethereum Transaction Hands-on Session", function () {
     // 10 ^ 18 wei = 10 ^ 9 gwei = 1 ether
 
     // 1 Ether is equal to 10^18 Wei
-    expect(ethers.utils.parseEther("1")).to.deep.equal(
-      BigNumber.from("1000000000000000000")
-    );
+    expect(ethers.utils.parseEther("1")).to.deep.equal(BigNumber.from("1000000000000000000"));
 
     // 10^18 Wei is equal to 1 Ether
-    expect(ethers.utils.formatUnits("1000000000000000000", "ether")).to.equal(
-      "1.0"
-    );
+    expect(ethers.utils.formatUnits("1000000000000000000", "ether")).to.equal("1.0");
 
     // 1 Gwei is equal to 10^9 Wei (1,000,000,000 Wei)
-    expect(ethers.utils.parseUnits("1", "gwei")).to.deep.equal(
-      BigNumber.from("1000000000")
-    );
+    expect(ethers.utils.parseUnits("1", "gwei")).to.deep.equal(BigNumber.from("1000000000"));
 
     // Convert 10^9 Wei to Gwei (which is 1 Gwei)
     expect(ethers.utils.formatUnits("1000000000", "gwei")).to.equal("1.0");

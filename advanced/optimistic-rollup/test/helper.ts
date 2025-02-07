@@ -1,26 +1,16 @@
 import { ethers } from "hardhat";
 
-export function verifyMerkleProof(
-  leaf: string,
-  proof: string[],
-  root: string
-): boolean {
+export function verifyMerkleProof(leaf: string, proof: string[], root: string): boolean {
   let computedHash = leaf;
 
   for (const proofElement of proof) {
     if (computedHash < proofElement) {
       computedHash = ethers.utils.keccak256(
-        ethers.utils.solidityPack(
-          ["bytes32", "bytes32"],
-          [computedHash, proofElement]
-        )
+        ethers.utils.solidityPack(["bytes32", "bytes32"], [computedHash, proofElement])
       );
     } else {
       computedHash = ethers.utils.keccak256(
-        ethers.utils.solidityPack(
-          ["bytes32", "bytes32"],
-          [proofElement, computedHash]
-        )
+        ethers.utils.solidityPack(["bytes32", "bytes32"], [proofElement, computedHash])
       );
     }
   }
@@ -44,19 +34,13 @@ export function generateMerkleRoot(elements: string[]): string {
       if (element1 <= element2) {
         newElements.push(
           ethers.utils.keccak256(
-            ethers.utils.solidityPack(
-              ["bytes32", "bytes32"],
-              [element1, element2]
-            )
+            ethers.utils.solidityPack(["bytes32", "bytes32"], [element1, element2])
           )
         );
       } else {
         newElements.push(
           ethers.utils.keccak256(
-            ethers.utils.solidityPack(
-              ["bytes32", "bytes32"],
-              [element2, element1]
-            )
+            ethers.utils.solidityPack(["bytes32", "bytes32"], [element2, element1])
           )
         );
       }
@@ -92,10 +76,7 @@ export function generateBlockMerkleRoot(transactions: any[]): string {
   return generateMerkleRoot(leaves);
 }
 
-export function generateMerkleProof(
-  elements: string[],
-  index: number
-): string[] {
+export function generateMerkleProof(elements: string[], index: number): string[] {
   let proof: string[] = [];
   let currentIndex = index;
   let currentElements = [...elements];

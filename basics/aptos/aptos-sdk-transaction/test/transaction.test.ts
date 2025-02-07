@@ -2,13 +2,7 @@ import dotenv from "dotenv";
 import { expect } from "chai";
 import * as fs from "fs";
 import * as path from "path";
-import {
-  Account,
-  Aptos,
-  AptosConfig,
-  Ed25519PrivateKey,
-  Network,
-} from "@aptos-labs/ts-sdk";
+import { Account, Aptos, AptosConfig, Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
 
 dotenv.config();
 
@@ -20,9 +14,7 @@ describe("#Aptos Transaction Hands-on Session", function () {
   before(() => {
     const privateKeyHex = process.env.PRIVATE_KEY_HEX;
     if (!privateKeyHex) {
-      throw new Error(
-        "PRIVATE_KEY_HEX is not defined in environment variables."
-      );
+      throw new Error("PRIVATE_KEY_HEX is not defined in environment variables.");
     }
 
     // Ensure that the sender has sufficient balance
@@ -68,9 +60,7 @@ describe("#Aptos Transaction Hands-on Session", function () {
       accountAddress: sender.accountAddress,
     });
 
-    expect(initialBalance - currentBalance).to.be.equal(
-      transferAmount + gasCost
-    );
+    expect(initialBalance - currentBalance).to.be.equal(transferAmount + gasCost);
     expect(
       await aptos.getAccountAPTAmount({
         accountAddress: receiver.accountAddress,
@@ -112,9 +102,7 @@ describe("#Aptos Transaction Hands-on Session", function () {
     });
 
     expect(deployedModule).to.be.exist;
-    expect(deployedModule.abi?.address).to.be.equal(
-      sender.accountAddress.toString()
-    );
+    expect(deployedModule.abi?.address).to.be.equal(sender.accountAddress.toString());
   });
 
   it("Set and get a value in SimpleStorage", async () => {

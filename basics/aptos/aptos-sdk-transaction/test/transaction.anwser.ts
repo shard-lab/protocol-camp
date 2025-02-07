@@ -22,9 +22,7 @@ describe("#Aptos Transaction Hands-on Session", function () {
   before(() => {
     const privateKeyHex = process.env.PRIVATE_KEY_HEX;
     if (!privateKeyHex) {
-      throw new Error(
-        "PRIVATE_KEY_HEX is not defined in environment variables."
-      );
+      throw new Error("PRIVATE_KEY_HEX is not defined in environment variables.");
     }
 
     sender = Account.fromPrivateKey({
@@ -85,12 +83,9 @@ describe("#Aptos Transaction Hands-on Session", function () {
     })) as UserTransactionResponse;
 
     const gasCost =
-      Number(executedTransaction.gas_used) *
-      Number(executedTransaction.gas_unit_price);
+      Number(executedTransaction.gas_used) * Number(executedTransaction.gas_unit_price);
 
-    expect(initialBalance - currentBalance).to.be.equal(
-      transferAmount + gasCost
-    );
+    expect(initialBalance - currentBalance).to.be.equal(transferAmount + gasCost);
     expect(
       await aptos.getAccountAPTAmount({
         accountAddress: receiver.accountAddress,
@@ -99,28 +94,18 @@ describe("#Aptos Transaction Hands-on Session", function () {
   });
 
   it("Deploy a SimpleStorage Module", async () => {
-    const modulePath = path.join(
-      __dirname,
-      "../build/my-dapp/bytecode_modules/"
-    );
+    const modulePath = path.join(__dirname, "../build/my-dapp/bytecode_modules/");
 
-    const moduleFiles = fs
-      .readdirSync(modulePath)
-      .filter((f) => f.endsWith(".mv"));
+    const moduleFiles = fs.readdirSync(modulePath).filter((f) => f.endsWith(".mv"));
 
     const moduleData = moduleFiles.map((file) => {
       const bytecode = fs.readFileSync(path.join(modulePath, file));
       return bytecode.toString("hex");
     });
 
-    const packageMetadataPath = path.join(
-      __dirname,
-      "../build/my-dapp/package-metadata.bcs"
-    );
+    const packageMetadataPath = path.join(__dirname, "../build/my-dapp/package-metadata.bcs");
 
-    const packageMetadata = fs
-      .readFileSync(packageMetadataPath)
-      .toString("hex");
+    const packageMetadata = fs.readFileSync(packageMetadataPath).toString("hex");
 
     const rawtransaction = await aptos.publishPackageTransaction({
       account: sender.accountAddress,
@@ -143,9 +128,7 @@ describe("#Aptos Transaction Hands-on Session", function () {
     });
 
     expect(deployedModule).to.be.exist;
-    expect(deployedModule.abi?.address).to.be.equal(
-      sender.accountAddress.toString()
-    );
+    expect(deployedModule.abi?.address).to.be.equal(sender.accountAddress.toString());
   });
 
   it("Set and get a value in SimpleStorage", async () => {

@@ -1,17 +1,10 @@
-import {
-  Account,
-  Aptos,
-  AptosConfig,
-  MoveValue,
-  Network,
-} from "@aptos-labs/ts-sdk";
+import { Account, Aptos, AptosConfig, MoveValue, Network } from "@aptos-labs/ts-sdk";
 import { expect } from "chai";
 
 describe("#Aptos Multi Agent Transactions Hands-on Session", function () {
   this.timeout(10000);
   const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
-  const moduleAddress =
-    "0xe699e1882aaf75a5130f5aa6af68446aa3819b24a1a7b7d9a2a0330bbfe5b3a0";
+  const moduleAddress = "0xe699e1882aaf75a5130f5aa6af68446aa3819b24a1a7b7d9a2a0330bbfe5b3a0";
   let signer: Account;
   let cosigner: Account;
   let initialValue: number;

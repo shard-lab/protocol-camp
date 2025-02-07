@@ -1,12 +1,6 @@
 import dotenv from "dotenv";
 import { expect } from "chai";
-import {
-  Account,
-  Aptos,
-  AptosConfig,
-  Ed25519PrivateKey,
-  Network,
-} from "@aptos-labs/ts-sdk";
+import { Account, Aptos, AptosConfig, Ed25519PrivateKey, Network } from "@aptos-labs/ts-sdk";
 
 dotenv.config();
 
@@ -43,9 +37,7 @@ describe("#Aptos Account Hands-on Session", () => {
     // Set process.env.PRIVATE_KEY_HEX in .env file
     const privateKeyHex = process.env.PRIVATE_KEY_HEX;
     if (!privateKeyHex || privateKeyHex.length === 0) {
-      throw new Error(
-        "PRIVATE_KEY_HEX is not defined in environment variables."
-      );
+      throw new Error("PRIVATE_KEY_HEX is not defined in environment variables.");
     }
 
     const account = Account.fromPrivateKey({

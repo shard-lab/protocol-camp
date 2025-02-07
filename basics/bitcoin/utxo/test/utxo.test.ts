@@ -10,14 +10,16 @@ describe("Basic Functionality Tests", () => {
     node = new Node();
   });
 
-
   describe("getUTXOs", () => {
     it("should return unspent outputs from a genesis transaction", () => {
-      const genesis = Transaction.create([], [
-        { address: "Alice", amount: 3 },
-        { address: "Bob", amount: 2 },
-      ]);
-      node.transactions.push(genesis); 
+      const genesis = Transaction.create(
+        [],
+        [
+          { address: "Alice", amount: 3 },
+          { address: "Bob", amount: 2 },
+        ]
+      );
+      node.transactions.push(genesis);
 
       const aliceUtxos = node.getUTXOs("Alice");
       expect(aliceUtxos).to.have.lengthOf(1);
@@ -29,9 +31,7 @@ describe("Basic Functionality Tests", () => {
     });
 
     it("should exclude outputs that have been used as inputs in another transaction", () => {
-      const genesis = Transaction.create([], [
-        { address: "Alice", amount: 3 },
-      ]);
+      const genesis = Transaction.create([], [{ address: "Alice", amount: 3 }]);
       node.transactions.push(genesis);
       node.send("Alice", "Bob", 2);
 
@@ -47,34 +47,33 @@ describe("Basic Functionality Tests", () => {
 
   describe("executeTransaction", () => {
     it("should gather enough UTXOs to cover the requested amount", () => {
-      const genesis = Transaction.create([], [
-        { address: "Alice", amount: 0.5 },
-        { address: "Alice", amount: 0.7 },
-      ]);
+      const genesis = Transaction.create(
+        [],
+        [
+          { address: "Alice", amount: 0.5 },
+          { address: "Alice", amount: 0.7 },
+        ]
+      );
       node.transactions.push(genesis);
       const tx = node.send("Alice", "Bob", 1.0);
 
       for (const input of tx.inputs) {
-        const utxo = node.getAllUTXOs().find(
-          (u) => u.txId === input.txId && u.vOut === input.vOut
-        );
-        expect(utxo).to.be.undefined; 
+        const utxo = node.getAllUTXOs().find((u) => u.txId === input.txId && u.vOut === input.vOut);
+        expect(utxo).to.be.undefined;
       }
       expect(tx.outputs).to.have.lengthOf(2);
 
-      const bobOut = tx.outputs.find(o => o.address === "Bob");
+      const bobOut = tx.outputs.find((o) => o.address === "Bob");
       expect(bobOut).to.exist;
       expect(new Decimal(bobOut!.amount).toNumber()).to.eq(1.0);
 
-      const aliceOut = tx.outputs.find(o => o.address === "Alice");
+      const aliceOut = tx.outputs.find((o) => o.address === "Alice");
       expect(aliceOut).to.exist;
       expect(new Decimal(aliceOut!.amount).toNumber()).to.eq(0.2);
     });
 
     it("should throw an error when insufficient funds", () => {
-      const genesis = Transaction.create([], [
-        { address: "Alice", amount: 0.3 },
-      ]);
+      const genesis = Transaction.create([], [{ address: "Alice", amount: 0.3 }]);
       node.transactions.push(genesis);
 
       expect(() => {
@@ -83,9 +82,7 @@ describe("Basic Functionality Tests", () => {
     });
 
     it("should create only one output if leftover = 0", () => {
-      const genesis = Transaction.create([], [
-        { address: "Alice", amount: 1 },
-      ]);
+      const genesis = Transaction.create([], [{ address: "Alice", amount: 1 }]);
       node.transactions.push(genesis);
       const tx = node.send("Alice", "Bob", 1);
 
