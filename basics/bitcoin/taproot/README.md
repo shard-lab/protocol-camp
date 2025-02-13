@@ -10,7 +10,7 @@ This repository provides a simple, educational example of how Taproot (Pay-to-Ta
    - Understand that a single UTXO can store several possible script conditions. Only the branch actually used is revealed at spend.
 
 2. Merkle Tree
-   - Learn how each script branch is hashed into a “leaf,” and how these leaves are combined into a single merkleRoot.
+   - Learn how each script branch is hashed into a "leaf," and how these leaves are combined into a single merkleRoot.
    - See how partial revelation (the chosen leaf + path) proves membership in the tree.
 
 3. Educational Simplification
@@ -19,7 +19,7 @@ This repository provides a simple, educational example of how Taproot (Pay-to-Ta
 
 4. Implementing `verifyScriptPath`
    - You will write (or review) a function that checks whether a given leafHash and merklePath recombine to the merkleRoot of a UTXO, and ensures the publicKey matches.
-   - This simulates the core logic behind Taproot’s script path spending.
+   - This simulates the core logic behind Taproot's script path spending.
 
 ## 3. Core Concepts
 
@@ -31,13 +31,15 @@ Each script (in reality, a Tapscript) is simplified here to a `publicKey` (strin
 
 This class (e.g., `UTXO`) holds just:
 
-- `publicKey`: An abstraction of the “tweaked Taproot key”
+- `publicKey`: The Taproot output key
 - `merkleRoot`: The combined root of all script leaves
+
+Together, these components form the Taproot output's locking script.
 
 ### 3.3 UnlockingScript
 
 - Built off-chain when spending.
-- Contains a chosen leaf’s hash (`leafHash`), a `merklePath` (siblings), and the `publicKey`.
+- Contains a chosen leaf's hash (`leafHash`), a `merklePath` (siblings), and the `publicKey`.
 - Passed to `verifyScriptPath()` for final validation.
 
 

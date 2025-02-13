@@ -41,10 +41,35 @@ export function buildMerkleRoot(leafHashes: string[]): string {
 
 export function buildMerklePath(leafIndex: number, leafHashes: string[]): string[] {
   if (leafHashes.length <= 1) return [];
-  if (leafHashes.length === 2) {
-    return [leafHashes[leafIndex === 0 ? 1 : 0]];
+  
+  const merklePath: string[] = [];
+  let currentLevel = [...leafHashes];
+  let currentIndex = leafIndex;
+
+  while (currentLevel.length > 1) {
+    const isEven = currentIndex % 2 === 0;
+    const siblingIndex = isEven ? currentIndex + 1 : currentIndex - 1;
+    
+    if (siblingIndex < currentLevel.length) {
+      merklePath.push(currentLevel[siblingIndex]);
+    } else {
+      merklePath.push(currentLevel[currentIndex]);
+    }
+
+    const nextLevel: string[] = [];
+    for (let i = 0; i < currentLevel.length; i += 2) {
+      if (i + 1 < currentLevel.length) {
+        nextLevel.push(sha256Hex(currentLevel[i] + currentLevel[i + 1]));
+      } else {
+        nextLevel.push(currentLevel[i]);
+      }
+    }
+    
+    currentIndex = Math.floor(currentIndex / 2);
+    currentLevel = nextLevel;
   }
-  return leafHashes.filter((_, i) => i !== leafIndex);
+
+  return merklePath;
 }
 
 export class UTXO {
@@ -56,6 +81,11 @@ export class UTXO {
     this.merkleRoot = merkleRoot;
   }
 
+  // check if the unlocking script is valid
+  // 1. check if the public key is the same
+  // 2. check if the leaf hash is the same
+  // 3. check if the merkle path is the same
+  // 4. return true if all the above are true
   public verifyScriptPath(unlocking: UnlockingScript): boolean {
     throw new Error("Implement me!");
   }

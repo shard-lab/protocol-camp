@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { describe, it, beforeEach } from "mocha";
-import { Script, UTXO, UnlockingScript, buildMerkleRoot, buildMerklePath, getLeafHash } from "../src/t2tr";
+import { Script, UTXO, UnlockingScript, buildMerkleRoot, buildMerklePath, getLeafHash } from "../src/p2tr";
 
 describe("UTXO (No proofData) - Extended Tests", () => {
     const ALICE_PUBKEY = "AlicePubKey";
