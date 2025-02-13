@@ -87,7 +87,7 @@ export class Node {
     );
 
     if (totalInput.lt(totalOutput)) {
-      throw new Error(`Invalid transaction: totalInput < totalOutput`);
+      throw new Error("Invalid transaction: totalInput < totalOutput");
     }
   }
 }

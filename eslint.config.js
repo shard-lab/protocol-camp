@@ -18,7 +18,6 @@ module.exports = [
       "@typescript-eslint/no-explicit-any": "warn",
       "no-console": ["warn", { allow: ["warn", "error"] }],
       quotes: ["error", "double"],
-      "@typescript-eslint/quotes": ["error", "double"],
     },
     ignores: ["node_modules/**", "dist/**", "coverage/**", "hardhat.config.ts"],
   },
