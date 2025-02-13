@@ -1,12 +1,12 @@
 ---
-name: Educational Content Proposal
-about: Template for proposing new educational content
+name: Educational Module Proposal
+about: Template for proposing new educational module
 title: "[EDUCATION] "
 labels: education
 assignees: ''
 ---
 
-# 🏫 Educational Content Proposal
+# 🏫 Educational Module Proposal
 
 ## 🎯 Learning Objective  
 _What concept or skill will this learning session cover?_  
