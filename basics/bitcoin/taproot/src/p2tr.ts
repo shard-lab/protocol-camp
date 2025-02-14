@@ -82,10 +82,9 @@ export class UTXO {
   }
 
   // check if the unlocking script is valid
-  // 1. check if the public key is the same
-  // 2. check if the leaf hash is the same
-  // 3. check if the merkle path is the same
-  // 4. return true if all the above are true
+  // 1. check if the public key is equal to the UnlockingScript's public key
+  // 2. check if the UTXO's merkleRoot is equal to the value(expected as merkleRoot) which can be calculated by leafHash and merklePath.
+  // 3. return true if all the above are true
   public verifyScriptPath(unlocking: UnlockingScript): boolean {
     throw new Error("Implement me!");
   }
