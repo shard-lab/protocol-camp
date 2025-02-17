@@ -1,0 +1,12 @@
+{
+  "name": "izkp",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "mocha test/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {}
+}
