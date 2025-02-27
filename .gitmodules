@@ -1,0 +1,3 @@
+[submodule "basics/ethereum/proxy-upgrade/lib/forge-std"]
+	path = basics/ethereum/proxy-upgrade/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
