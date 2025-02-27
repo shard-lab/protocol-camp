@@ -69,28 +69,18 @@ We specifically focus on **slot conflicts** that can arise when upgrading contra
    - Adds a `counter` variable for demonstration, plus `initialize(owner_)`, `setCounter(value)`, etc.
 
 3. **Tests**
-   - **`SlotConflicted.t.sol`** (or a similarly named test file)
+   - **`Proxy.t.sol`** (or a similarly named test file)
      - Deploys `Proxy` pointing to a simpler contract, then upgrades to `EIP1967Storage`.
      - Observes that unless `_setOwner()` and `_getOwner()` are correctly implemented, ownership remains `address(0)` or conflicts with other data.
    - Failing tests guide you to fix the slot usage.
 
 ## **5. Running Tests**
 
-1. **Install Dependencies**
+```bash
+forge test
+```
 
-   ```bash
-   forge install
-   ```
-
-   (Or ensure Foundry is installed: [Foundry Book](https://book.getfoundry.sh/))
-
-2. **Compile & Test**
-
-   ```bash
-   forge test
-   ```
-
-   - You’ll see tests fail where slot collisions occur or where `_setOwner()/_getOwner()` remain unimplemented.
+You’ll see tests fail where slot collisions occur or where `_setOwner()/_getOwner()` remain unimplemented.
 
 ## **6. Conclusion**
 

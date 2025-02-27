@@ -22,7 +22,7 @@ export function getLeafHash(script: Script): string {
 
 export function buildMerkleRoot(leafHashes: string[]): string {
   if (leafHashes.length === 0) {
-    return "".padEnd(64, "0"); 
+    return "".padEnd(64, "0");
   }
   let current = [...leafHashes];
   while (current.length > 1) {
@@ -41,7 +41,7 @@ export function buildMerkleRoot(leafHashes: string[]): string {
 
 export function buildMerklePath(leafIndex: number, leafHashes: string[]): string[] {
   if (leafHashes.length <= 1) return [];
-  
+
   const merklePath: string[] = [];
   let currentLevel = [...leafHashes];
   let currentIndex = leafIndex;
@@ -49,7 +49,7 @@ export function buildMerklePath(leafIndex: number, leafHashes: string[]): string
   while (currentLevel.length > 1) {
     const isEven = currentIndex % 2 === 0;
     const siblingIndex = isEven ? currentIndex + 1 : currentIndex - 1;
-    
+
     if (siblingIndex < currentLevel.length) {
       merklePath.push(currentLevel[siblingIndex]);
     } else {
@@ -64,7 +64,7 @@ export function buildMerklePath(leafIndex: number, leafHashes: string[]): string
         nextLevel.push(currentLevel[i]);
       }
     }
-    
+
     currentIndex = Math.floor(currentIndex / 2);
     currentLevel = nextLevel;
   }
