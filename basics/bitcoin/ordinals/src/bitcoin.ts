@@ -38,13 +38,19 @@ export class Block {
   }
 }
 
+export interface TxOutput {
+  address: Address;
+  amount: number;
+  script?: string;
+}
+
 /**
  * Represents a Bitcoin transaction
  */
 export class Transaction {
   public id: string; // Transaction identifier
   public inputs: Array<{ txId: string; vOut: number }>; // References to previous transaction outputs being spent
-  public outputs: Array<{ address: Address; amount: number }>; // New outputs created by this transaction
+  public outputs: Array<TxOutput>; // New outputs created by this transaction
 
   /**
    * Creates a new Transaction instance
@@ -55,7 +61,7 @@ export class Transaction {
   constructor(
     id: string,
     inputs: Array<{ txId: string; vOut: number }>,
-    outputs: Array<{ address: Address; amount: number }>
+    outputs: Array<TxOutput>
   ) {
     this.id = id;
     this.inputs = inputs;
@@ -70,7 +76,7 @@ export class Transaction {
    */
   static create(
     inputs: Array<{ txId: string; vOut: number }>,
-    outputsData: Array<{ address: string; amount: number }>
+    outputsData: Array<TxOutput>
   ): Transaction {
     const txId = randomUUID(); // Generate a random transaction ID
     return new Transaction(txId, inputs, outputsData);
@@ -119,5 +125,22 @@ export class Bitcoin {
     this.pendingTransactions = [];
 
     return newBlock;
+  }
+
+  static getTxOutput(txId: string, vOut: number): TxOutput | undefined {
+    for (const block of this.blocks) {
+      for (const tx of block.txs) {
+        if (tx.id === txId && tx.outputs[vOut]) {
+          return tx.outputs[vOut];
+        }
+      }
+    }
+
+    for (const tx of this.pendingTransactions) {
+      if (tx.id === txId && tx.outputs[vOut]) {
+        return tx.outputs[vOut];
+      }
+    }
+    return undefined;
   }
 }
