@@ -1,4 +1,4 @@
-import { XOR, OR, AND, LogicGate, Leaf } from "./gate";
+import { XOR, OR, AND, LogicGate, Leaf } from "../gate";
 import { u4 } from "./u4";
 
 /**

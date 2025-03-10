@@ -1,4 +1,5 @@
-import { AND, Leaf, LogicGate, NOT, OR, u4, XOR } from ".";
+import { u4 } from ".";
+import { AND, Leaf, LogicGate, NOT, OR, XOR } from "../gate";
 
 /**
  * Compares two 4-bit numbers and returns whether x > y

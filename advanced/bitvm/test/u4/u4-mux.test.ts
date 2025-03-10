@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { toBit4, mux, Leaf } from "../../src/u4";
+import { toBit4, mux } from "../../src/u4";
+import { Leaf } from "../../src/gate";
 
 describe("4-bit Multiplexer", () => {
   describe("mux", () => {

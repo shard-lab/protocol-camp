@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { toBit4, fromBit4 } from "../../src/u4";
+import { toBit4, fromBit4 } from "../../src/u4/u4";
 
 describe("4-bit Operations", () => {
   describe("toBit4", () => {

@@ -1,4 +1,4 @@
-import { Leaf, LogicGate } from "./gate";
+import { Leaf, LogicGate } from "../gate";
 
 /** 4-bit array: stored in [LSB, ..., MSB] order */
 export type u4 = [LogicGate, LogicGate, LogicGate, LogicGate];

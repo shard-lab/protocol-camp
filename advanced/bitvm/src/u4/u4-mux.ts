@@ -1,4 +1,5 @@
-import { AND, LogicGate, NOT, OR, u4 } from ".";
+import { u4 } from ".";
+import { AND, LogicGate, NOT, OR } from "../gate";
 
 /**
  * Multiplexes a single bit based on select signal
