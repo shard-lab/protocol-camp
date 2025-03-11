@@ -1,9 +1,14 @@
 import { randomUUID } from "crypto";
+import * as crypto from "crypto";
 
 // Note: This example does not perform rigorous transaction validation.
-// It is a simplified model designed to demonstrate how to track bitcoin
-// at the satoshi level. The focus is on ordinal tracking rather than
+// It is a simplified model designed to demonstrate how ordinals protocol works
+// The focus is on ordinal tracking rather than
 // transaction verification.
+
+export function sha256Hex(data: string): string {
+  return crypto.createHash("sha256").update(data, "utf8").digest("hex");
+}
 
 /**
  * Represents a Bitcoin address as a string
@@ -38,10 +43,17 @@ export class Block {
   }
 }
 
+/**
+ * Represents a Bitcoin transaction output
+ * @property address - The recipient's Bitcoin address
+ * @property amount - The amount of satoshis sent
+ */
+
 export interface TxOutput {
+  // In real Bitcoin, this would be a locking script that controls who can spend this output
+  // For this example, we'll just use an address and skip validation
   address: Address;
   amount: number;
-  script?: string;
 }
 
 /**
@@ -51,6 +63,7 @@ export class Transaction {
   public id: string; // Transaction identifier
   public inputs: Array<{ txId: string; vOut: number }>; // References to previous transaction outputs being spent
   public outputs: Array<TxOutput>; // New outputs created by this transaction
+  public witness: string[];
 
   /**
    * Creates a new Transaction instance
@@ -61,11 +74,13 @@ export class Transaction {
   constructor(
     id: string,
     inputs: Array<{ txId: string; vOut: number }>,
-    outputs: Array<TxOutput>
+    outputs: Array<TxOutput>,
+    witness?: string[]
   ) {
     this.id = id;
     this.inputs = inputs;
     this.outputs = outputs;
+    this.witness = witness ?? [];
   }
 
   /**
@@ -76,10 +91,11 @@ export class Transaction {
    */
   static create(
     inputs: Array<{ txId: string; vOut: number }>,
-    outputsData: Array<TxOutput>
+    outputsData: Array<TxOutput>,
+    witness?: string[]
   ): Transaction {
     const txId = randomUUID(); // Generate a random transaction ID
-    return new Transaction(txId, inputs, outputsData);
+    return new Transaction(txId, inputs, outputsData, witness);
   }
 }
 
@@ -87,8 +103,8 @@ export class Transaction {
  * Main Bitcoin class that manages the blockchain and transactions
  */
 export class Bitcoin {
-  public static blocks: Block[] = [];
-  public static pendingTransactions: Transaction[] = [];
+  public blocks: Block[] = [];
+  public pendingTransactions: Transaction[] = [];
 
   /**
    * Mines a new block and adds it to the blockchain.
@@ -102,7 +118,7 @@ export class Bitcoin {
    * @param miner - The Bitcoin address of the miner who will receive the block reward
    * @returns The newly created and mined block
    */
-  static mine(miner: Address): Block {
+  mine(miner: Address): Block {
     // Coinbase transaction is the first transaction in a block
     // It's created by miners and has no inputs (doesn't spend any previous outputs)
     // It includes the block reward (newly created bitcoins) and transaction fees
@@ -127,20 +143,12 @@ export class Bitcoin {
     return newBlock;
   }
 
-  static getTxOutput(txId: string, vOut: number): TxOutput | undefined {
-    for (const block of this.blocks) {
-      for (const tx of block.txs) {
-        if (tx.id === txId && tx.outputs[vOut]) {
-          return tx.outputs[vOut];
-        }
-      }
-    }
-
-    for (const tx of this.pendingTransactions) {
-      if (tx.id === txId && tx.outputs[vOut]) {
-        return tx.outputs[vOut];
-      }
-    }
-    return undefined;
+  /**
+   * Finds a transaction by its ID from all blocks in the blockchain
+   * @param txid - Transaction ID to search for
+   * @returns The matching transaction if found, undefined otherwise
+   */
+  getTransaction(txid: string): Transaction | undefined {
+    return this.blocks.flatMap((block) => block.txs).find((tx) => tx.id === txid);
   }
 }
