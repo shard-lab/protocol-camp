@@ -149,3 +149,11 @@ The protocol uses a sophisticated commitment scheme:
 ## 5. Running Tests
 
 1. Install dependencies:
+```bash
+npm install
+```
+
+2. Run tests:
+```bash
+npm run test
+```
