@@ -1,0 +1,19 @@
+{
+  "name": "ordinals",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "crypto": "^1.0.1"
+  }
+}
