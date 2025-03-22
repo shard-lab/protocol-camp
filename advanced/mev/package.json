@@ -1,0 +1,27 @@
+{
+  "name": "mev",
+  "version": "1.0.0",
+  "description": "MEV Challenge Project",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "round-manager": "ts-node src/round-manager.ts",
+    "mev": "ts-node src/mev.ts"
+  },
+  "keywords": [
+    "ethereum",
+    "mev",
+    "defi"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ethers": "^6.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}
