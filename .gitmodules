@@ -1,3 +1,9 @@
 [submodule "basics/ethereum/proxy-upgrade/lib/forge-std"]
 	path = basics/ethereum/proxy-upgrade/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "basics/ethereum/mev/lib/forge-std"]
+	path = basics/ethereum/mev/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "basics/ethereum/mev/lib/openzeppelin-contracts"]
+	path = basics/ethereum/mev/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
