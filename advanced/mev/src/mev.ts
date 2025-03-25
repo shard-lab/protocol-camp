@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import * as dotenv from "dotenv";
-import { ANVIL_URL, MevABI, mevAddress, USER } from "./config";
+import { loadConfig } from "./config";
 import {
   createWebSocketManager,
   DEFAULT_MAX_RECONNECT_ATTEMPTS,
@@ -10,36 +10,61 @@ import {
 
 dotenv.config();
 
+/**
+ * RoundInfo interface represents the state of a round in the MEV competition
+ */
 interface RoundInfo {
-  round: number;
-  targetN: number;
-  currentCount: number;
-  active: boolean;
-  reward: bigint;
-  lastUpdated: number;
+  round: number;         // Current round number
+  targetN: number;       // Target position that wins the round
+  currentCount: number;  // Current number of participants
+  active: boolean;       // Whether the round is active
+  reward: bigint;        // Amount of ETH as reward
+  lastUpdated: number;   // Timestamp when this info was last updated
 }
 
-let provider: ethers.JsonRpcProvider;
-let userWallet: ethers.Wallet;
-let mevContract: ethers.Contract;
-let wsManager: WebSocketManager;
-
 /**
- * Initialize providers and contracts
+ * Mev class implements a bot for the MEV competition
+ * 
+ * This class is responsible for:
+ * 1. Monitoring the mempool for pending transactions
+ * 2. Tracking blockchain state and round information
+ * 3. Implementing strategies to win the MEV competition
+ * 4. Maintaining reliable WebSocket connections with reconnection logic
+ * 5. Sending optimally timed and priced transactions
  */
-function initializeProviders() {
-  try {
+class Mev {
+  private readonly provider: ethers.JsonRpcProvider;
+  private readonly userWallet: ethers.Wallet;
+  private readonly mevContract: ethers.Contract;
+  private readonly wsManager: WebSocketManager;
+  
+  /**
+   * Create a new MEV bot instance
+   * 
+   * @param anvilUrl - URL of the Ethereum JSON-RPC provider
+   * @param mevAddress - Address of the MEV contract
+   * @param privateKey - Private key of the user wallet
+   * @param mevAbi - ABI of the MEV contract
+   * @param wsUrl - WebSocket URL for mempool monitoring
+   */
+  constructor(
+    anvilUrl: string,
+    mevAddress: string,
+    privateKey: string,
+    mevAbi: string[],
+    wsUrl: string = "ws://localhost:8545"
+  ) {
     // Initialize HTTP provider and wallet
-    provider = new ethers.JsonRpcProvider(ANVIL_URL);
-    userWallet = new ethers.Wallet(USER.pk, provider);
+    this.provider = new ethers.JsonRpcProvider(anvilUrl);
+    this.userWallet = new ethers.Wallet(privateKey, this.provider);
     
     // Initialize contract
-    mevContract = new ethers.Contract(mevAddress, MevABI, provider);
-    mevContract = mevContract.connect(userWallet) as ethers.Contract;
+    this.mevContract = new ethers.Contract(mevAddress, mevAbi, this.provider);
+    this.mevContract = this.mevContract.connect(this.userWallet) as ethers.Contract;
     
     // Initialize WebSocket manager with reconnection capabilities
-    wsManager = createWebSocketManager(
-      "ws://localhost:8545",
+    this.wsManager = createWebSocketManager(
+      wsUrl,
       {
         maxAttempts: DEFAULT_MAX_RECONNECT_ATTEMPTS,
         reconnectDelay: DEFAULT_RECONNECT_DELAY
@@ -56,142 +81,169 @@ function initializeProviders() {
         },
         onSubscriptionSetup: async (wsProvider) => {
           // Resubscribe to events
-          const pendingSuccess = await subscribePendingTransactions(wsProvider);
+          const pendingSuccess = await this.subscribePendingTransactions(wsProvider);
           return pendingSuccess;
         }
       }
     );
-    
-    return true;
-  } catch (error) {
-    console.error("Error initializing providers:", error);
-    return false;
-  }
-}
-
-/**
- * Main function to start the MEV bot
- */
-async function main() {
-  console.log(`Starting MEV bot for contract: ${mevAddress}`);
-  
-  // Initialize providers and contracts
-  if (!initializeProviders()) {
-    console.error("Failed to initialize providers. Exiting...");
-    process.exit(1);
-  }
-  console.log(`User: ${USER.address}`);
-  console.log(`Balance: ${ethers.formatEther(await provider.getBalance(USER.address))} ETH`);
-  
-  // Set up event listeners
-  setupEventListeners();
-  
-  // Start monitoring pending transactions and new blocks
-  const wsProvider = wsManager.initialize();
-  await subscribePendingTransactions(wsProvider);
-  await subscribeNewBlocks();
-  
-  console.log("\n==================================================");
-  console.log("🤖 MEV bot ready");
-  console.log("🔄 Waiting for rounds...");
-  console.log("==================================================\n");
-  process.stdin.resume();
-}
-
-/**
- * Subscribe to pending transactions in the mempool
- * This function monitors the mempool for new participation transactions
- */
-async function subscribePendingTransactions(wsProvider = wsManager.getProvider()) {
-  if (!wsProvider) {
-    console.error("WebSocket provider not initialized");
-    return false;
   }
   
-  console.log("Subscribing to pending transactions...");
-  
-  try {
-    // Remove any existing listeners to prevent duplicates
-    wsProvider.removeAllListeners("pending");
+  /**
+   * Start the MEV bot and initialize all monitoring
+   * This is the main entry point for the bot's operation
+   */
+  public async start(): Promise<void> {
+    console.log(`Starting MEV bot for contract: ${await this.mevContract.getAddress()}`);
+    const userAddress = this.userWallet.address;
     
-    // Subscribe to newPendingTransactions
-    wsProvider.on("pending", async (txHash) => {
-
-    });
+    console.log(`User: ${userAddress}`);
+    console.log(`Balance: ${ethers.formatEther(await this.provider.getBalance(userAddress))} ETH`);
     
-    console.log("Successfully subscribed to pending transactions");
-    return true;
-  } catch (error) {
-    console.error("Failed to subscribe to pending transactions:", error);
-    return false;
+    // Set up event listeners
+    this.setupEventListeners();
+    
+    // Start monitoring pending transactions and new blocks
+    const wsProvider = this.wsManager.initialize();
+    await this.subscribePendingTransactions(wsProvider);
+    await this.subscribeNewBlocks();
+    
+    console.log("\n==================================================");
+    console.log("🤖 MEV bot ready");
+    console.log("🔄 Waiting for rounds...");
+    console.log("==================================================\n");
+    
+    // Keep the process running
+    process.stdin.resume();
   }
-}
-
-/**
- * Subscribe to new blocks
- * This function reacts to each new block, updating round info and checking transactions
- */
-async function subscribeNewBlocks() {
-  console.log("Subscribing to new blocks...");
   
-  try {
-    provider.removeAllListeners("block");
+  /**
+   * Subscribe to pending transactions in the mempool
+   * 
+   * This function monitors the mempool for new participation transactions to:
+   * 1. Track other participants' transactions
+   * 2. Analyze gas prices and timing
+   * 3. Make strategic decisions about when to participate
+   * 
+   * @param wsProvider - WebSocket provider to use for subscription
+   * @returns True if subscription was successful, false otherwise
+   */
+  private async subscribePendingTransactions(wsProvider = this.wsManager.getProvider()): Promise<boolean> {
+    if (!wsProvider) {
+      console.error("WebSocket provider not initialized");
+      return false;
+    }
     
-    provider.on("block", async (blockNumber) => {
-      console.log(`Block #${blockNumber}`);
+    console.log("Subscribing to pending transactions...");
+    
+    try {
+      // Remove any existing listeners to prevent duplicates
+      wsProvider.removeAllListeners("pending");
       
+      // Subscribe to newPendingTransactions
+      wsProvider.on("pending", async (txHash) => {
+        // Implementation goes here
+      });
+      
+      console.log("Successfully subscribed to pending transactions");
+      return true;
+    } catch (error) {
+      console.error("Failed to subscribe to pending transactions:", error);
+      return false;
+    }
+  }
+  
+  /**
+   * Subscribe to new blocks
+   * 
+   * This function monitors new blocks to:
+   * 1. Update round information
+   * 2. Check transaction confirmations
+   * 3. Make decisions based on blockchain state
+   * 
+   * @returns True if subscription was successful, false otherwise
+   */
+  private async subscribeNewBlocks(): Promise<boolean> {
+    console.log("Subscribing to new blocks...");
+    
+    try {
+      this.provider.removeAllListeners("block");
+      
+      this.provider.on("block", async (blockNumber) => {
+        console.log(`Block #${blockNumber}`);
+        // Implementation goes here
+      });
+      
+      console.log("Successfully subscribed to new blocks");
+      return true;
+    } catch (error) {
+      console.error("Failed to subscribe to new blocks:", error);
+      
+      setTimeout(() => {
+        console.log("Attempting to resubscribe to blocks...");
+        this.subscribeNewBlocks();
+      }, DEFAULT_RECONNECT_DELAY);
+      
+      return false;
+    }
+  }
+  
+  /**
+   * Send a participation transaction with the given gas price
+   * 
+   * This function handles the actual transaction submission with error handling
+   * 
+   * @param gasPrice - Gas price to use for the transaction in wei
+   */
+  private async sendParticipationTransaction(gasPrice: bigint): Promise<void> {
+    try {
+      const tx = await this.mevContract.participate({
+        gasPrice: gasPrice,
+        gasLimit: "2000000"
+      });
+      
+      console.log(`Tx sent: ${tx.hash}`);
+    } catch (error) {
+      console.error("Transaction error:", error);
+    }
+  }
+  
+  /**
+   * Set up event listeners for contract events
+   * 
+   * This function sets up listeners for important contract events to:
+   * 1. Track round starts and completions
+   * 2. Monitor other participants' activities
+   * 3. React to changes in contract state
+   */
+  private setupEventListeners(): void {
+    // Remove existing listeners first to prevent duplicates
+    this.mevContract.removeAllListeners();
+    
+    // Round started event
+    this.mevContract.on("RoundStarted", async (round, targetN, reward) => {
+      // Implementation goes here
     });
     
-    console.log("Successfully subscribed to new blocks");
-  } catch (error) {
-    console.error("Failed to subscribe to new blocks:", error);
-    setTimeout(() => {
-      console.log("Attempting to resubscribe to blocks...");
-      subscribeNewBlocks();
-    }, DEFAULT_RECONNECT_DELAY);
+    // Participation event
+    this.mevContract.on("Participated", async (round, participant, position) => {
+      // Implementation goes here
+    });
+    
+    // Winner selected event
+    this.mevContract.on("WinnerSelected", async (round, winner, reward) => {
+      // Implementation goes here
+    });
   }
 }
 
-/**
- * Send a participation transaction with the given gas price
- */
-async function sendParticipationTransaction(gasPrice: bigint) {
-  try {
-    const tx = await mevContract.participate({
-      gasPrice: gasPrice,
-      gasLimit: "2000000"
-    });
-    
-    console.log(`Tx sent: ${tx.hash}`);
-  } catch (error) {
-    console.error("Transaction error:", error);
-  }
+// Start the mev bot
+async function main() {
+  const config = loadConfig();
+  const mevBot = new Mev(config.anvilUrl, config.mevAddress, config.user.pk, config.mevAbi);
+  await mevBot.start();
 }
 
-/**
- * Set up event listeners for contract events
- */
-function setupEventListeners() {
-  // Remove existing listeners first to prevent duplicates
-  mevContract.removeAllListeners();
-  
-  // Round started event
-  mevContract.on("RoundStarted", async (round, targetN, reward) => {
-
-  });
-  
-  // Participation event
-  mevContract.on("Participated", async (round, participant, position) => {
-
-  });
-  
-  // Winner selected event
-  mevContract.on("WinnerSelected", async (round, winner, reward) => {
-
-  });
-}
-
-// Start the bot
+// Start the mev bot
 main().catch(error => {
   console.error("Fatal error:", error);
   process.exit(1);

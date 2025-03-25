@@ -28,7 +28,8 @@ Make sure Docker daemon is running before executing the setup script.
 ├── logs/              # Log outputs from the bots and round manager
 ├── scripts/ts/src/    # TypeScript source code
 │   ├── config.ts      # Configuration values and settings
-│   ├── mev.ts         # Main MEV bot logic implementation
+│   ├── bot.ts         # Basic bot implementation with random timing
+│   ├── mev.ts         # Advanced MEV bot implementation
 │   ├── round-manager.ts # Manages the rounds of the competition
 │   └── utils.ts       # Utility functions and helpers
 ├── shared/            # Shared data between containers
@@ -55,15 +56,14 @@ The `setup.sh` script automates the setup and execution of the MEV challenge env
 
 ## Bot and Round Manager
 
-### Bot (`mev.ts`)
+### Bot (`bot.ts`)
 
-The bot is the central component of the MEV challenge. Students are expected to implement key methods to create an effective MEV bot:
+The basic bot is a simple participant in the MEV competition:
 
-- **Pending Transaction Monitoring**: Subscribes to mempool transactions to detect other participants
-- **Block Monitoring**: Processes new blocks to update round state
-- **Strategic Participation**: Calculates the optimal time and gas price to submit transactions to hit the target position
-
-The bot uses WebSocket connections to monitor the blockchain in real-time and implements reconnection logic for resilience.
+- Implements a random timing strategy for participation
+- Uses rand gas prices within a predefined range
+- Monitors the contract state to detect active rounds
+- Each bot instance represents a single participant with its own wallet
 
 ### Round Manager (`round-manager.ts`)
 
@@ -102,19 +102,37 @@ Your main task is to implement the `mev.ts` bot to maximize your chances of winn
 
 The challenge simulates real MEV competition scenarios where bots compete for profitable positions in the blockchain's execution order.
 
+### Implementation Goals
+
+- The round manager tracks your MEV bot's success rate. Your goal is to maximize this success rate - there is no fixed target percentage.
+- Do NOT use a DDOS approach with random transaction spamming. While this could be an effective strategy in certain situations, we recommend exploring other approaches in this learning module.
+- Focus on implementing intelligent strategies that analyze mempool data and make strategic decisions about when to participate.
+- Your solution should demonstrate an understanding of gas price optimization and transaction timing.
+
 ## Getting Started
 
 To start the MEV challenge:
 
 ```bash
-# Navigate to the mev directory
-cd basics/ethereum/mev
+# Install dependencies
+npm i
+
+# Make the setup script executable
+chmod +x ./setup.sh
 
 # Run the setup script
 ./setup.sh
 ```
 
+**Important Notes:**
+- Rename `.env.example` to `.env` before running the setup. The private keys in `.env.example` are test keys from the Anvil node. Never use these on the actual mainnet.
+- The `./shared` folder and `./shared/addresses.json` file will be automatically created when you run the setup script.
+
 The script will set up the environment, deploy the contracts, and start the bots and round manager. You can then observe the competition in real-time through the logs.
+
+To stop the challenge:
+- On Mac: Press `Command + C`
+- On Windows: Press `Ctrl + C`
 
 ## Stopping the Challenge
 
