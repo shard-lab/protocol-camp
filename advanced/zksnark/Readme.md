@@ -8,6 +8,8 @@ This Learning Module is a simple example implementation of a zk-SNARK proof syst
 > - Basic understanding of elliptic curve cryptography
 > - Familiarity with polynomial arithmetic and finite fields
 
+<br>
+
 ## 1. Overview
 
 Imagine you're trying to prove that you know the answer to a puzzle — but you don't want to reveal what the answer actually is.
@@ -25,6 +27,8 @@ It follows the Groth16 structure — converting R1CS constraints into polynomial
 
 The codebase is written entirely in **TypeScript** and focuses on clarity, modularity, and adherence to cryptographic foundations.
 
+<br>
+
 ## 2. Learning Objectives
 
 - Understand how computation is modeled and encoded using R1CS and QAP
@@ -32,6 +36,8 @@ The codebase is written entirely in **TypeScript** and focuses on clarity, modul
 - Explore the trusted setup phase and how it enables zero-knowledge
 - Verify zk-proofs efficiently using pairing-based cryptography
 - Grasp the overall structure and intuition behind Groth16 zk-SNARKs
+
+<br>
 
 ## 3. Core Concepts
 
@@ -273,6 +279,8 @@ e(αA + βB, γG₂) == e(C, G₂) · e(H, T)
 
 These extensions prevent the prover from exploiting linearity in the polynomials and forging valid-looking proofs.
 
+<br>
+
 ## 4. Implementation Details
 
 The implementation follows the concepts explained above. Here's a guide to the key files:
@@ -299,10 +307,6 @@ The test file demonstrates the complete flow of creating and verifying a zk-SNAR
 The implementation uses:
 
 - `@noble/bls12-381`: For elliptic curve operations on BLS12-381 curve
-
-### Running the Tests
-
-To run the tests and see zk-SNARKs in action:
 
 ## 5. Running Tests
 
