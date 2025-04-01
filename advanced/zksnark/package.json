@@ -1,0 +1,15 @@
+{
+  "name": "zksnark",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.test.ts test/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@noble/bls12-381": "^1.4.0"
+  }
+}
