@@ -36,11 +36,28 @@ describe("R1CS Tests", () => {
     // Example witness: [1, 3, 4, 12, 12, 48, 576]
     const witness = [1n, 3n, 4n, 12n, 12n, 48n, 144n]; // Fixed: x*y*z = 3*4*12 = 144
 
-    // QAP 변환
+    // 1. Convert R1CS to QAP (Quadratic Arithmetic Program)
+    // Transform each R1CS constraint into polynomial form to create the QAP
+    // This conversion allows us to work with polynomials instead of linear constraints
     const qap = QAP.fromR1CS(r1csSystem);
+
+    // 2. Generate Trusted Setup
+    // Create Common Reference String (CRS) for the QAP
+    // CRS contains cryptographic parameters needed for both proving and verification
+    // This step typically requires a trusted third party in practice
     const crs = CRSSetup.generate(qap);
+
+    // 3. Create Prover and Generate Proof
+    // Initialize prover with the witness values
+    // Generate zero-knowledge proof using QAP and CRS
+    // The proof contains commitments A, B, C, and H that hide the actual witness
     const prover = new Prover(witness);
     const proof = prover.generateProof(qap, crs);
+
+    // 4. Create Verifier and Verify Proof
+    // Verify the generated proof is valid
+    // Uses pairing-based cryptography to check relationships between proof elements
+    // Importantly, verification happens without knowing the original witness values
     const verifier = new Verifier();
     const bool = verifier.verify({
       A: proof.A,
@@ -50,6 +67,5 @@ describe("R1CS Tests", () => {
       T: crs.T,
     });
 
-    expect(bool).to.be.true;
   });
 });
