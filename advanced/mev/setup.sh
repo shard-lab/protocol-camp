@@ -48,7 +48,7 @@ cleanup() {
   rm -rf ./shared/*
   
   # List and remove old images related to the project
-  local old_images=$(docker images | grep "mev-" | awk '{print $3}')
+  local old_images=$(docker images | grep "nth-caller-game-" | awk '{print $3}')
   if [ ! -z "$old_images" ]; then
     echo "$old_images" | xargs docker rmi -f 2>/dev/null
     log "$GREEN" "Removed old images."
@@ -58,7 +58,7 @@ cleanup() {
 }
 
 # Main execution starts here
-log "$GREEN" "Starting MEV challenge environment..."
+log "$GREEN" "Starting Nth Caller Game environment..."
 
 # Check if Docker is running
 if ! check_docker; then
@@ -111,20 +111,20 @@ log "$BLUE" "Contract addresses:"
 cat "$SHARED_DIR/addresses.json"
 
 # Start bots
-log "$BLUE" "Starting bots..."
-docker compose up -d --build bot
+log "$BLUE" "Starting caller bots..."
+docker compose up -d --build caller-bot
 
-# Wait for bot to be ready
-log "$YELLOW" "Waiting for bot to initialize (10 seconds)..."
+# Wait for caller bot to be ready
+log "$YELLOW" "Waiting for caller bot to initialize (10 seconds)..."
 sleep 10
 
-# Start round manager
-log "$BLUE" "Starting round manager..."
-docker compose up -d --build round-manager
+# Start game manager
+log "$BLUE" "Starting game manager..."
+docker compose up -d --build game-manager
 
 # Show logs
 log "$BLUE" "Starting log monitoring (Ctrl+C to stop)..."
-docker compose logs -f bot round-manager
+docker compose logs -f caller-bot game-manager
 
 # Cleanup on exit
 trap cleanup EXIT

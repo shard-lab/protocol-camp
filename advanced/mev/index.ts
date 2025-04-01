@@ -1,12 +1,12 @@
 import { ethers } from "ethers";
 import * as dotenv from "dotenv";
-import { loadConfig } from "./config";
+import { loadConfig } from "./src/config";
 import {
   createWebSocketManager,
   DEFAULT_MAX_RECONNECT_ATTEMPTS,
   DEFAULT_RECONNECT_DELAY,
   WebSocketManager
-} from "./utils";
+} from "./src/utils";
 
 dotenv.config();
 
@@ -89,8 +89,19 @@ class Mev {
   }
   
   /**
-   * Start the MEV bot and initialize all monitoring
-   * This is the main entry point for the bot's operation
+   * Overall MEV Bot Operation
+   * 
+   * The MEV bot operates through the following key phases:
+   * 
+   * 1. Initialization: Set up HTTP/WebSocket connections and contract event listeners
+   * 2. Monitoring: 
+   *    - Mempool: Track pending transactions, analyze gas prices and participants
+   *    - Blockchain: Update round info from new blocks, confirm transactions
+   * 3. Decision: Calculate current round state, participant count, optimal gas price, 
+   *    and winning probability
+   * 4. Execution: Call participate() at optimal moments with gas price higher than competitors
+   * 
+   * Key to success: Timing and gas price optimization to claim the exact Nth position
    */
   public async start(): Promise<void> {
     console.log(`Starting MEV bot for contract: ${await this.mevContract.getAddress()}`);
@@ -141,7 +152,10 @@ class Mev {
       
       // Subscribe to newPendingTransactions
       wsProvider.on("pending", async (txHash) => {
-        // Implementation goes here
+        // ============= IMPLEMENTATION REQUIRED =============
+        // TODO: Implement mempool monitoring logic
+        throw new Error("subscribePendingTransactions handler not implemented!");
+        // ===================================================
       });
       
       console.log("Successfully subscribed to pending transactions");
@@ -170,7 +184,11 @@ class Mev {
       
       this.provider.on("block", async (blockNumber) => {
         console.log(`Block #${blockNumber}`);
-        // Implementation goes here
+        
+        // ============= IMPLEMENTATION REQUIRED =============
+        // TODO: Implement block monitoring logic
+        throw new Error("subscribeNewBlocks handler not implemented!");
+        // ===================================================
       });
       
       console.log("Successfully subscribed to new blocks");
@@ -195,6 +213,9 @@ class Mev {
    * @param gasPrice - Gas price to use for the transaction in wei
    */
   private async sendParticipationTransaction(gasPrice: bigint): Promise<void> {
+    // ============= IMPLEMENTATION REQUIRED =============
+    // TODO: Implement transaction sending logic
+    // Your implementation should replace the following code
     try {
       const tx = await this.mevContract.participate({
         gasPrice: gasPrice,
@@ -221,25 +242,47 @@ class Mev {
     
     // Round started event
     this.mevContract.on("RoundStarted", async (round, targetN, reward) => {
-      // Implementation goes here
+      // ============= IMPLEMENTATION REQUIRED =============
+      // TODO: Implement round start event handler
+      throw new Error("RoundStarted event handler not implemented!");
+      // ===================================================
     });
     
     // Participation event
     this.mevContract.on("Participated", async (round, participant, position) => {
-      // Implementation goes here
+      // ============= IMPLEMENTATION REQUIRED =============
+      // TODO: Implement participation event handler
+      throw new Error("Participated event handler not implemented!");
+      // ===================================================
     });
     
     // Winner selected event
     this.mevContract.on("WinnerSelected", async (round, winner, reward) => {
-      // Implementation goes here
+      // ============= IMPLEMENTATION REQUIRED =============
+      // TODO: Implement winner event handler
+      throw new Error("WinnerSelected event handler not implemented!");
+      // ===================================================
     });
+  }
+  
+  /**
+   * Find optimal position and send a transaction
+   * 
+   * This function determines if and when to send a participation transaction
+   * based on the current state of the round and mempool
+   */
+  private async findOptimalPositionAndSendTransaction(): Promise<void> {
+    // ============= IMPLEMENTATION REQUIRED =============
+    // TODO: Implement position finding and transaction sending logic
+    throw new Error("findOptimalPositionAndSendTransaction not implemented!");
+    // ===================================================
   }
 }
 
 // Start the mev bot
 async function main() {
   const config = loadConfig();
-  const mevBot = new Mev(config.anvilUrl, config.mevAddress, config.user.pk, config.mevAbi);
+  const mevBot = new Mev(config.anvilUrl, config.nthCallerGameAddress, config.user.pk, config.nthCallerGameAbi);
   await mevBot.start();
 }
 

@@ -10,4 +10,4 @@ COPY .env ./
 COPY shared ./shared
 RUN npm run build
 
-CMD ["node", "dist/bot.js"] 
+CMD ["node", "dist/caller-bot.js"] 

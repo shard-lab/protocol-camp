@@ -8,4 +8,4 @@ COPY tsconfig.json ./
 COPY .env ./
 RUN npm install
 
-CMD ["node", "dist/mev.js"] 
+CMD ["node", "dist/caller.js"] 

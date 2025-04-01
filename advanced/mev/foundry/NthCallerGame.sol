@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-contract Mev {
+contract NthCallerGame {
   address public owner;
   uint256 public currentRound;
   uint256 public targetN;

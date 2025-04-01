@@ -27,10 +27,10 @@ services:
     networks:
       - mev-network
 
-  round-manager:
+  game-manager:
     build:
       context: .
-      dockerfile: docker/round-manager.Dockerfile
+      dockerfile: docker/game-manager.Dockerfile
     volumes:
       - ./src:/app/src
       - ./shared:/shared
@@ -39,10 +39,10 @@ services:
     networks:
       - mev-network
 
-  bot:
+  caller-bot:
     build:
       context: .
-      dockerfile: docker/bot.Dockerfile
+      dockerfile: docker/caller-bot.Dockerfile
     volumes:
       - ./src:/app/src
       - ./shared:/shared

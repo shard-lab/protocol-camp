@@ -13,16 +13,16 @@ export interface Participant {
 
 export interface Config {
   anvilUrl: string;
-  mevContractOwnerPk: string;
+  nthCallerGameOwnerPk: string;
   user: Participant;
   bots: Participant[];
   participants: Participant[];
-  mevAddress: string;
-  mevAbi: string[];
+  nthCallerGameAddress: string;
+  nthCallerGameAbi: string[];
 }
 
 export const loadConfig = (): Config => {
-    const mevABI = [
+    const nthCallerGameABI = [
         "function owner() view returns (address)",
         "function currentRound() view returns (uint256)",
         "function targetN() view returns (uint256)",
@@ -67,28 +67,28 @@ export const loadConfig = (): Config => {
     }];
     const user: Participant = {
         name: "User",
-        pk: getRequiredEnv("USER_PK", "User private key is required for the main MEV bot"),
-        address: new ethers.Wallet(getRequiredEnv("USER_PK", "User private key is required for the main MEV bot")).address,
+        pk: getRequiredEnv("USER_PK", "User private key is required for the main Nth Caller Game bot"),
+        address: new ethers.Wallet(getRequiredEnv("USER_PK", "User private key is required for the main Nth Caller Game bot")).address,
     };
     const participants: Participant[] = [...bots, user];
     const config: Config = {
         anvilUrl: getRequiredEnv("ANVIL_URL", "Anvil URL is required for connecting to the blockchain"),
-        mevContractOwnerPk: getRequiredEnv("MEV_CONTRACT_OWNER_PK", "Contract owner private key is required for deploying and managing rounds"),
+        nthCallerGameOwnerPk: getRequiredEnv("NTH_CALLER_GAME_OWNER_PK", "Contract owner private key is required for deploying and managing rounds"),
             user: user,
         bots: bots,
         participants: participants,
-        mevAddress: "",
-        mevAbi: mevABI,
+        nthCallerGameAddress: "",
+        nthCallerGameAbi: nthCallerGameABI,
     };
 
     const addressesPath = path.resolve(__dirname, "../shared/addresses.json");
     if (fs.existsSync(addressesPath)) {
         const addresses = JSON.parse(fs.readFileSync(addressesPath, "utf8"));
-        config.mevAddress = addresses.mev;
+        config.nthCallerGameAddress = addresses.nthCallerGame;
     }
-    if (!config.mevAddress) {
-        console.warn("Warning: mev address not found in addresses.json, using fallback address");
-        config.mevAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    if (!config.nthCallerGameAddress) {
+        console.warn("Warning: nth caller game address not found in addresses.json, using fallback address");
+        config.nthCallerGameAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
     }
 
 

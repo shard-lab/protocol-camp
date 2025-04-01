@@ -21,7 +21,7 @@ interface Participant {
 }
 
 /**
- * RoundManager class is responsible for orchestrating the MEV competition
+ * GameManager class is responsible for orchestrating the MEV competition
  * 
  * This class handles:
  * 1. Starting new rounds with random target positions
@@ -30,7 +30,7 @@ interface Participant {
  * 4. Tracking competition statistics
  * 5. Processing contract events related to rounds
  */
-class RoundManager {
+class GameManager {
   private monitorTimer: NodeJS.Timeout | null = null;
   private readonly provider: ethers.JsonRpcProvider;
   private readonly owner: ethers.Wallet;
@@ -43,7 +43,7 @@ class RoundManager {
   private readonly userAddress: string;
   
   /**
-   * Create a new RoundManager instance
+   * Create a new GameManager instance
    * 
    * @param anvilUrl - URL of the Ethereum node
    * @param mevAddress - Address of the MEV contract
@@ -84,11 +84,11 @@ class RoundManager {
   }
   
   /**
-   * Start the round manager and initialize the first round
-   * This is the main entry point for the round manager's operation
+   * Start the game manager and initialize the first round
+   * This is the main entry point for the game manager's operation
    */
   public async start(): Promise<void> {
-    console.log("Starting Round Manager...");
+    console.log("Starting Game Manager...");
     
     // Check deployer balance
     const ownerBalance = await this.provider.getBalance(this.owner.address);
@@ -300,13 +300,13 @@ class RoundManager {
 
 async function main() {
   const config = loadConfig();
-  const roundManager = new RoundManager(
+  const gameManager = new GameManager(
     config.anvilUrl,
-    config.mevAddress,
-    config.mevContractOwnerPk,
+    config.nthCallerGameAddress,
+    config.nthCallerGameOwnerPk,
     config.user.address,
     config.participants.map(p => ({ name: p.name, address: p.address })),
-    config.mevAbi,
+    config.nthCallerGameAbi,
     {
       checkInterval: 5000,
       minN: 3,
@@ -315,10 +315,10 @@ async function main() {
   );
   
   // Start round manager
-  await roundManager.start();
+  await gameManager.start();
 }
 
 main().catch(error => {
-  console.error("Round Manager error:", error);
+  console.error("Game Manager error:", error);
   process.exit(1);
 });

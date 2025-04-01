@@ -5,14 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "round-manager": "ts-node src/round-manager.ts",
-    "mev": "ts-node src/mev.ts"
+    "start": "ts-node index.ts"
   },
-  "keywords": [
-    "ethereum",
-    "mev",
-    "defi"
-  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

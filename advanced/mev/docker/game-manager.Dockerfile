@@ -10,4 +10,4 @@ COPY .env ./
 COPY shared ./shared
 RUN npm run build
 
-CMD ["node", "dist/round-manager.js"]
+CMD ["node", "dist/game-manager.js"]

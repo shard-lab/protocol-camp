@@ -5,7 +5,7 @@ import { loadConfig } from "./config";
 dotenv.config();
 
 /**
- * Bot class represents a participant in the MEV competition.
+ * CallerBot class represents a participant in the Nth Caller Game.
  * 
  * Each bot instance is responsible for:
  * 1. Maintaining its own wallet and connection to the contract
@@ -13,7 +13,7 @@ dotenv.config();
  * 3. Submitting participation transactions with randomized gas prices
  * 4. Implementing a simple strategy with randomized timing
  */
-class Bot {
+class CallerBot {
   private readonly provider: ethers.JsonRpcProvider;
   private readonly wallet: ethers.Wallet;
   private readonly contract: ethers.Contract;
@@ -23,17 +23,17 @@ class Bot {
   private readonly participateInterval: number;
   
   /**
-   * Create a new bot instance
+   * Create a new caller bot instance
    * 
    * @param anvilUrl - URL of the Ethereum node (Anvil - foundry node)
-   * @param mevAddress - Address of the MEV contract
-   * @param mevAbi - ABI of the MEV contract
+   * @param nthCallerGameAddress - Address of the Nth Caller Game contract
+   * @param nthCallerGameAbi - ABI of the Nth Caller Game contract
    * @param config - Bot configuration including name, privateKey, gas prices, and interval
    */
   constructor(
     anvilUrl: string,
-    mevAddress: string,
-    mevAbi: string[],
+    nthCallerGameAddress: string,
+    nthCallerGameAbi: string[],
     config: {
       name: string;
       privateKey: string;
@@ -48,8 +48,8 @@ class Bot {
     this.participateInterval = config.participateInterval;
     this.provider = new ethers.JsonRpcProvider(anvilUrl);
     this.wallet = new ethers.Wallet(config.privateKey, this.provider);
-    this.contract = new ethers.Contract(mevAddress, mevAbi, this.wallet);
-    console.log(`Bot ${this.name}: addr=${this.wallet.address.substring(0, 10)}..., gas=${this.minGasPrice}-${this.maxGasPrice}`);
+    this.contract = new ethers.Contract(nthCallerGameAddress, nthCallerGameAbi, this.wallet);
+    console.log(`CallerBot ${this.name}: addr=${this.wallet.address.substring(0, 10)}..., gas=${this.minGasPrice}-${this.maxGasPrice}`);
   }
   
   /**
@@ -127,9 +127,9 @@ async function main() {
   const MIN_GAS_PRICE = ethers.parseUnits("1", "gwei");
   const MIN_PARTICIPATE_INTERVAL = 3000; // 3 seconds
   const config = loadConfig();
-  const bots: Bot[] = [];
+  const bots: CallerBot[] = [];
   for (const botConfig of config.bots) {
-    const bot = new Bot(config.anvilUrl, config.mevAddress, config.mevAbi, {
+    const bot = new CallerBot(config.anvilUrl, config.nthCallerGameAddress, config.nthCallerGameAbi, {
       name: botConfig.name,
       privateKey: botConfig.pk,
       minGasPrice: MIN_GAS_PRICE,
@@ -142,7 +142,7 @@ async function main() {
   // Start all bots
   for (const bot of bots) {
     bot.start().catch(error => {
-      console.error(`Bot startup error:`, error);
+      console.error(`CallerBot startup error:`, error);
     });
   }
   
