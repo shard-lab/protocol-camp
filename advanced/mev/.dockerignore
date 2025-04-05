@@ -1,0 +1,21 @@
+# Node.js
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.npm
+.yarn
+
+# Foundry
+out
+cache
+broadcast
+
+# Etc
+.git
+.github
+.gitignore
+.DS_Store
+*.log
+*.swp
+*.swo
