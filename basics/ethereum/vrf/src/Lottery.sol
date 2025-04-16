@@ -37,13 +37,7 @@ contract Lottery is VRFV2PlusWrapperConsumerBase, Ownable {
 
     // State variables
     uint256 public winningRate;                       // Winning rate (0-10000, where 10000 = 100%)
-    uint256 private totalPlayers;                      // Total number of players
-    uint256 private totalWinners;                      // Total number of winners
-    uint256 private totalPrizePool;                    // Total prize pool in wei
-    uint256 private totalWinnings;                     // Total winnings in wei
     mapping(address => bool) private hasPendingRequest; // Tracks if a player has a pending request
-    mapping(address => uint256) private playerWinnings; // Tracks each player's total winnings
-    mapping(address => uint256) private playerLosses;   // Tracks each player's total losses
     mapping(uint256 => address) private requestToPlayer; // Maps request ID to player address
 
     /**
@@ -82,27 +76,14 @@ contract Lottery is VRFV2PlusWrapperConsumerBase, Ownable {
         if (hasPendingRequest[msg.sender]) revert AlreadyHasRequest();
 
         // Calculate the price for the VRF request
-        uint256 price = i_vrfV2PlusWrapper.calculateRequestPriceNative(
-            CALLBACK_GAS_LIMIT,
-            NUM_WORDS
-        );
+        uint256 price = estimateVrfFee();
         if (msg.value < price) revert InsufficientPayment();
 
-        bytes memory extraArgs = VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment : true}));
-
         // Request random words from VRF
-        uint256 requestId = i_vrfV2PlusWrapper.requestRandomWordsInNative{value: price}(
-            CALLBACK_GAS_LIMIT,
-            REQUEST_CONFIRMATIONS,
-            NUM_WORDS,
-            extraArgs
-        );
+        uint256 requestId = _requestRandomWords();
 
         hasPendingRequest[msg.sender] = true;
         requestToPlayer[requestId] = msg.sender;
-        totalPlayers++;
-        totalPrizePool += (msg.value - price); // Only add the excess to prize pool
-
         emit LotteryJoined(msg.sender, requestId);
     }
 
@@ -122,14 +103,10 @@ contract Lottery is VRFV2PlusWrapperConsumerBase, Ownable {
 
         if (isWinner) {
             uint256 prize = address(this).balance;
-            totalWinners++;
-            totalWinnings += prize;
-            playerWinnings[player] += prize;
             (bool success,) = player.call{value: prize}("");
             require(success, "Transfer failed");
             emit LotteryWon(player, prize);
         } else {
-            playerLosses[player]++;
             emit LotteryLost(player);
         }
     }
@@ -143,57 +120,24 @@ contract Lottery is VRFV2PlusWrapperConsumerBase, Ownable {
         return hasPendingRequest[player];
     }
 
-    /**
-     * @dev Returns the total number of players
-     * @return uint256 Total number of players
-     */
-    function getTotalPlayers() external view returns (uint256) {
-        return totalPlayers;
+    function estimateVrfFee() public view returns (uint256) {
+        return i_vrfV2PlusWrapper.calculateRequestPriceNative(
+            CALLBACK_GAS_LIMIT,
+            NUM_WORDS
+        );
     }
 
-    /**
-     * @dev Returns the total number of winners
-     * @return uint256 Total number of winners
-     */
-    function getTotalWinners() external view returns (uint256) {
-        return totalWinners;
-    }
+    function _requestRandomWords() internal returns (uint256) {
+          bytes memory extraArgs = VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment : true}));
 
-    /**
-     * @dev Returns the total prize pool
-     * @return uint256 Total prize pool in wei
-     */
-    function getTotalPrizePool() external view returns (uint256) {
-        return totalPrizePool;
-    }
+        // Request random words from VRF
+        (uint256 requestId,) = requestRandomnessPayInNative(
+            CALLBACK_GAS_LIMIT,
+            REQUEST_CONFIRMATIONS,
+            NUM_WORDS,
+            extraArgs
+        );
 
-    /**
-     * @dev Returns the total winnings
-     * @return uint256 Total winnings in wei
-     */
-    function getTotalWinnings() external view returns (uint256) {
-        return totalWinnings;
-    }
-
-    /**
-     * @dev Returns a player's total winnings
-     * @param player Address of the player
-     * @return uint256 Player's total winnings in wei
-     */
-    function getPlayerWinnings(address player) external view returns (uint256) {
-        return playerWinnings[player];
-    }
-
-    /**
-     * @dev Returns a player's total losses
-     * @param player Address of the player
-     * @return uint256 Player's total number of losses
-     */
-    function getPlayerLosses(address player) external view returns (uint256) {
-        return playerLosses[player];
-    }
-
-    function dummyFunctionForTest() external view returns (uint256) {
-        return 1;
+        return requestId;
     }
 }
