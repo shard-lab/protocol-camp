@@ -194,3 +194,57 @@ forge install
 # Run tests
 forge test
 ```
+
+## 6. Hands-on Practice
+
+The Lottery contract is deployed and verified on BSC Testnet at [0x27e5De33cB6d31894a875891D3D86aA5F5b8aB2a](https://testnet.bscscan.com/address/0x27e5De33cB6d31894a875891D3D86aA5F5b8aB2a#readContract).
+
+### 6.1 Interacting with the Contract
+
+There are two ways to interact with the deployed contract:
+
+1. **Using Script**
+   - Use the provided `JoinLottery.s.sol` script
+   - Set required environment variables (refer to `.env.example`):
+     ```bash
+     export PRIVATE_KEY="your_private_key"
+     export BSC_TESTNET_RPC_URL="https://bsc-testnet-rpc.publicnode.com"
+     export VRF_WRAPPER="0x471506e6ADED0b9811D05B8cAc8Db25eE839Ac94"
+     export LOTTERY_ADDRESS="0x27e5De33cB6d31894a875891D3D86aA5F5b8aB2a"
+     export VALUE="8000000000000000"  # 0.008 BNB for VRF fee
+     ```
+   - Run the script:
+     ```bash
+     forge script script/JoinLottery.s.sol:JoinLottery --rpc-url $BSC_TESTNET_RPC_URL --broadcast -vvvv
+     ```
+
+2. **Using BSCScan**
+   - Connect your wallet (e.g., MetaMask) to BSC Testnet
+   - Visit the contract page on BSCScan
+   - Use the "Write Contract" section to interact with the contract
+   - Make sure your wallet has enough BNB for gas fees (at least 0.008 BNB for VRF fee)
+
+### 6.2 Getting Test BNB
+
+To get test BNB for the BSC Testnet:
+1. Join the [BSC Discord](https://discord.com/invite/bnbchain)
+2. Follow the guide in the #faucet-guide channel
+3. Request test BNB from the faucet
+
+### 6.3 Transaction Flow
+
+When you interact with the contract, you can observe the following transaction flow:
+
+1. **Join Transaction**
+   - When you call the `join` function, a transaction is sent to the BSC Testnet
+   - This transaction includes the VRF request fee and initiates the random number generation process
+   - Example transaction: [0x94a9e62a5a35af01a671b14a3bb9092d97abaa22494989dbc2c4faa27a3ec5ad](https://testnet.bscscan.com/tx/0x94a9e62a5a35af01a671b14a3bb9092d97abaa22494989dbc2c4faa27a3ec5ad)
+   
+
+2. **VRF Callback Transaction**
+   - After approximately 3 blocks, Chainlink VRF generates the random number
+   - The `fulfillRandomWords` function is automatically called with the random number
+   - This determines if you win and handles prize distribution
+   - Example transaction: [0xba1612cc888d270ab380cc2776e5a4156e26fa7c371872f2a3d288d001800d90](https://testnet.bscscan.com/tx/0xba1612cc888d270ab380cc2776e5a4156e26fa7c371872f2a3d288d001800d90)
+
+The entire process demonstrates how Chainlink VRF provides provably fair random numbers in a decentralized manner, with each step verifiable on the blockchain.
