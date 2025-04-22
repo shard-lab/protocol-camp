@@ -11,7 +11,7 @@ contract DeployLottery is Script {
     function run() external returns (Lottery) {
         // Get deployment parameters from environment variables
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        address owner = vm.envOr("OWNER", msg.sender);
+        address deployer = vm.addr(deployerPrivateKey);
         uint256 winningRate = vm.envOr("WINNING_RATE", DEFAULT_WINNING_RATE);
         address vrfWrapper = vm.envAddress("VRF_WRAPPER");
 
@@ -21,7 +21,7 @@ contract DeployLottery is Script {
         // Deploy Lottery contract
         Lottery lottery = new Lottery(
             vrfWrapper,
-            owner,
+            deployer,
             winningRate
         );
 
