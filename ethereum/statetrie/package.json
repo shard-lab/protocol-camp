@@ -1,0 +1,12 @@
+{
+  "name": "statetrie",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
